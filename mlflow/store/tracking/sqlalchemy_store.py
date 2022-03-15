@@ -20,6 +20,7 @@ from mlflow.store.tracking.dbmodels.models import (
     SqlTag,
     SqlExperimentTag,
     SqlLatestMetric,
+    SummaryMetricType,
 )
 from mlflow.store.db.base_sql_model import Base
 from mlflow.entities import RunStatus, SourceType, Experiment
@@ -602,11 +603,11 @@ class SqlAlchemyStore(AbstractStore):
             # already present in the ``metrics`` table. If the logged metric was already present,
             # we assume that the ``latest_metrics`` table already accounts for its presence
             if just_created:
-                self._update_latest_metric_if_necessary(logged_metric, session)
+                self._update_summary_metrics_if_necessary(logged_metric, session)
 
     @staticmethod
-    def _update_latest_metric_if_necessary(logged_metric, session):
-        def _compare_metrics(metric_a, metric_b):
+    def _update_summary_metrics_if_necessary(logged_metric, session):
+        def _compare_metrics_latest(metric_a, metric_b):
             """
             :return: True if ``metric_a`` is strictly more recent than ``metric_b``, as determined
                      by ``step``, ``timestamp``, and ``value``. False otherwise.
@@ -617,29 +618,52 @@ class SqlAlchemyStore(AbstractStore):
                 metric_b.value,
             )
 
-        # Fetch the latest metric value corresponding to the specified run_id and metric key and
-        # lock its associated row for the remainder of the transaction in order to ensure
+        def _compare_metrics_min(metric_a, metric_b):
+            """
+            :return: Whether the value of ``metric_a`` is strictly less than ``metric_b``.
+            """
+            return not metric_a.is_nan and metric_a.value < metric_b.value
+
+        def _compare_metrics_max(metric_a, metric_b):
+            """
+            :return: Whether the value of ``metric_a`` is strictly greater than ``metric_b``.
+            """
+            return not metric_a.is_nan and metric_a.value > metric_b.value
+
+        # Fetch the summary metrics corresponding to the specified run_id and metric key and
+        # lock their associated rows for the remainder of the transaction in order to ensure
         # isolation
-        latest_metric = (
+        summary_metrics = (
             session.query(SqlLatestMetric)
             .filter(
                 SqlLatestMetric.run_uuid == logged_metric.run_uuid,
                 SqlLatestMetric.key == logged_metric.key,
             )
             .with_for_update()
-            .one_or_none()
+            .all()
         )
-        if latest_metric is None or _compare_metrics(logged_metric, latest_metric):
-            session.merge(
-                SqlLatestMetric(
-                    run_uuid=logged_metric.run_uuid,
-                    key=logged_metric.key,
-                    value=logged_metric.value,
-                    timestamp=logged_metric.timestamp,
-                    step=logged_metric.step,
-                    is_nan=logged_metric.is_nan,
+        latest_metric = [
+            m for m in summary_metrics if m.summary_type == SummaryMetricType.LATEST.value
+        ]
+        min_metric = [m for m in summary_metrics if m.summary_type == SummaryMetricType.MIN.value]
+        max_metric = [m for m in summary_metrics if m.summary_type == SummaryMetricType.MAX.value]
+        for (metrics, summary_type, comparison) in [
+            (latest_metric, SummaryMetricType.LATEST, _compare_metrics_latest),
+            (min_metric, SummaryMetricType.MIN, _compare_metrics_min),
+            (max_metric, SummaryMetricType.MAX, _compare_metrics_max),
+        ]:
+            if not metrics or comparison(logged_metric, metrics[0]):
+                session.merge(
+                    SqlLatestMetric(
+                        run_uuid=logged_metric.run_uuid,
+                        summary_type=summary_type.value,
+                        key=logged_metric.key,
+                        value=logged_metric.value,
+                        timestamp=logged_metric.timestamp,
+                        step=logged_metric.step,
+                        is_nan=logged_metric.is_nan,
+                    )
                 )
-            )
 
     def get_metric_history(self, run_id, metric_key):
         with self.ManagedSessionMaker() as session:
@@ -873,9 +897,11 @@ def _to_sqlalchemy_filtering_statement(sql_statement, session):
     value = sql_statement.get("value")
     comparator = sql_statement.get("comparator").upper()
 
+    extra_criterion = []
     if SearchUtils.is_metric(key_type, comparator):
         entity = SqlLatestMetric
         value = float(value)
+        extra_criterion.append(entity.summary_type == SummaryMetricType.LATEST.value)
     elif SearchUtils.is_param(key_type, comparator):
         entity = SqlParam
     elif SearchUtils.is_tag(key_type, comparator):
@@ -891,11 +917,17 @@ def _to_sqlalchemy_filtering_statement(sql_statement, session):
 
     if comparator in SearchUtils.CASE_INSENSITIVE_STRING_COMPARISON_OPERATORS:
         op = SearchUtils.get_sql_filter_ops(entity.value, comparator)
-        return session.query(entity).filter(entity.key == key_name, op(value)).subquery()
+        return (
+            session.query(entity)
+            .filter(entity.key == key_name, op(value), *extra_criterion)
+            .subquery()
+        )
     elif comparator in SearchUtils.filter_ops:
         op = SearchUtils.filter_ops.get(comparator)
         return (
-            session.query(entity).filter(entity.key == key_name, op(entity.value, value)).subquery()
+            session.query(entity)
+            .filter(entity.key == key_name, op(entity.value, value), *extra_criterion)
+            .subquery()
         )
     else:
         return None

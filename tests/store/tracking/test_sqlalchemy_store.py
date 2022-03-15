@@ -677,7 +677,7 @@ class TestSqlAlchemyStoreSqlite(unittest.TestCase, AbstractStoreTest):
 
         # SQL store _get_run method returns full history of recorded metrics.
         # Should return duplicates as well
-        # MLflow RunData contains only the last reported values for metrics.
+        # MLflow RunData.metrics contains only the last reported values for metrics.
         with self.store.ManagedSessionMaker() as session:
             sql_run_metrics = self.store._get_run(session, run.info.run_id).metrics
             self.assertEqual(5, len(sql_run_metrics))
@@ -685,6 +685,28 @@ class TestSqlAlchemyStoreSqlite(unittest.TestCase, AbstractStoreTest):
             self.assertTrue(math.isnan(run.data.metrics["NaN"]))
             self.assertTrue(run.data.metrics["PosInf"] == 1.7976931348623157e308)
             self.assertTrue(run.data.metrics["NegInf"] == -1.7976931348623157e308)
+
+    def test_log_metric_updates_min_max(self):
+        run = self._run_factory()
+
+        key = "test_metric"
+        val = 100.0
+        metric1 = entities.Metric(key, val + 2, int(1000 * time.time()), 0)
+        metric2 = entities.Metric(key, float("nan"), int(1000 * time.time()) + 2, 0)
+        metric3 = entities.Metric(key, val, int(1000 * time.time()) + 2, 0)
+        nan_metric = entities.Metric("NaN", float("nan"), 0, 0)
+
+        self.store.log_metric(run.info.run_id, metric1)
+        self.store.log_metric(run.info.run_id, metric2)
+        self.store.log_metric(run.info.run_id, metric3)
+        self.store.log_metric(run.info.run_id, nan_metric)
+
+        run = self.store.get_run(run.info.run_id)
+
+        self.assertEqual(run.data.metric_minimums[key], val)
+        self.assertEqual(run.data.metric_maximums[key], val + 2)
+        self.assertTrue(math.isnan(run.data.metric_minimums["NaN"]))
+        self.assertTrue(math.isnan(run.data.metric_maximums["NaN"]))
 
     def test_log_metric_allows_multiple_values_at_same_ts_and_run_data_uses_max_ts_value(self):
         run = self._run_factory()
