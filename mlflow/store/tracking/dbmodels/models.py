@@ -1,3 +1,4 @@
+from enum import Enum
 import time
 from sqlalchemy.orm import relationship, backref
 import sqlalchemy as sa
@@ -203,7 +204,11 @@ class SqlRun(Base):
         )
 
         run_data = RunData(
-            metrics=[m.to_mlflow_entity() for m in self.latest_metrics],
+            metrics=[
+                m.to_mlflow_entity()
+                for m in self.latest_metrics
+                if m.summary_type == SummaryMetricType.LATEST.value
+            ],
             params=[p.to_mlflow_entity() for p in self.params],
             tags=[t.to_mlflow_entity() for t in self.tags],
         )
@@ -345,12 +350,23 @@ class SqlMetric(Base):
         )
 
 
+class SummaryMetricType(Enum):
+    LATEST = 0
+    MIN = 1
+    MAX = 2
+
+
 class SqlLatestMetric(Base):
     __tablename__ = "latest_metrics"
 
     key = Column(String(250))
     """
     Metric key: `String` (limit 250 characters). Part of *Primary Key* for ``latest_metrics`` table.
+    """
+    summary_type = Column(Integer, nullable=False, server_default="0")
+    """
+    Metric summary type: `Integer`, corresponding to a ``SummaryMetricType`` enum value.
+                          Part of *Primary Key* for ``latest_metrics`` table.
     """
     value = Column(sa.types.Float(precision=53), nullable=False)
     """
@@ -379,11 +395,17 @@ class SqlLatestMetric(Base):
     SQLAlchemy relationship (many:one) with :py:class:`mlflow.store.dbmodels.models.SqlRun`.
     """
 
-    __table_args__ = (PrimaryKeyConstraint("key", "run_uuid", name="latest_metric_pk"),)
+    __table_args__ = (
+        PrimaryKeyConstraint("key", "run_uuid", "summary_type", name="latest_metric_pk"),
+    )
 
     def __repr__(self):
-        return "<SqlLatestMetric({}, {}, {}, {})>".format(
-            self.key, self.value, self.timestamp, self.step
+        try:
+            summary_type = SummaryMetricType(self.type).name.lower()
+        except ValueError:
+            summary_type = "unknown_type"
+        return "<SqlLatestMetric({}, {}, {}, {}, {})>".format(
+            self.key, summary_type, self.value, self.timestamp, self.step
         )
 
     def to_mlflow_entity(self):

@@ -86,12 +86,13 @@ CREATE TABLE runs (
 
 CREATE TABLE latest_metrics (
 	key VARCHAR(250) NOT NULL,
+	summary_type INTEGER DEFAULT '0' NOT NULL,
 	value FLOAT NOT NULL,
 	timestamp BIGINT,
 	step BIGINT NOT NULL,
 	is_nan BOOLEAN NOT NULL,
 	run_uuid VARCHAR(32) NOT NULL,
-	CONSTRAINT latest_metric_pk PRIMARY KEY (key, run_uuid),
+	CONSTRAINT latest_metric_pk PRIMARY KEY (key, run_uuid, summary_type),
 	FOREIGN KEY(run_uuid) REFERENCES runs (run_uuid),
 	CHECK (is_nan IN (0, 1))
 )
