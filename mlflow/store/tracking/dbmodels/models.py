@@ -209,6 +209,16 @@ class SqlRun(Base):
                 for m in self.latest_metrics
                 if m.summary_type == SummaryMetricType.LATEST.value
             ],
+            metric_minimums=[
+                m.to_mlflow_entity()
+                for m in self.latest_metrics
+                if m.summary_type == SummaryMetricType.MIN.value
+            ],
+            metric_maximums=[
+                m.to_mlflow_entity()
+                for m in self.latest_metrics
+                if m.summary_type == SummaryMetricType.MAX.value
+            ],
             params=[p.to_mlflow_entity() for p in self.params],
             tags=[t.to_mlflow_entity() for t in self.tags],
         )
