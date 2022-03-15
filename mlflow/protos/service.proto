@@ -573,13 +573,20 @@ message Run {
 
 // Run data (metrics, params, and tags).
 message RunData {
-  // Run metrics.
+  // Run metrics (latest values).
   repeated Metric metrics = 1;
+
   // Run parameters.
   repeated Param params = 2;
 
   // Additional metadata key-value pairs.
   repeated RunTag tags = 3;
+
+  // Run metrics (minimum values).
+  repeated Metric metric_minimums = 4;
+
+  // Run metrics (maximum values).
+  repeated Metric metric_maximums = 5;
 }
 
 // Tag for a run.

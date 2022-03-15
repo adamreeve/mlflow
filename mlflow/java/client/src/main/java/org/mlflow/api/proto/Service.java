@@ -3266,7 +3266,7 @@ public final class Service {
 
     /**
      * <pre>
-     * Run metrics.
+     * Run metrics (latest values).
      * </pre>
      *
      * <code>repeated .mlflow.Metric metrics = 1;</code>
@@ -3275,7 +3275,7 @@ public final class Service {
         getMetricsList();
     /**
      * <pre>
-     * Run metrics.
+     * Run metrics (latest values).
      * </pre>
      *
      * <code>repeated .mlflow.Metric metrics = 1;</code>
@@ -3283,7 +3283,7 @@ public final class Service {
     org.mlflow.api.proto.Service.Metric getMetrics(int index);
     /**
      * <pre>
-     * Run metrics.
+     * Run metrics (latest values).
      * </pre>
      *
      * <code>repeated .mlflow.Metric metrics = 1;</code>
@@ -3291,7 +3291,7 @@ public final class Service {
     int getMetricsCount();
     /**
      * <pre>
-     * Run metrics.
+     * Run metrics (latest values).
      * </pre>
      *
      * <code>repeated .mlflow.Metric metrics = 1;</code>
@@ -3300,7 +3300,7 @@ public final class Service {
         getMetricsOrBuilderList();
     /**
      * <pre>
-     * Run metrics.
+     * Run metrics (latest values).
      * </pre>
      *
      * <code>repeated .mlflow.Metric metrics = 1;</code>
@@ -3395,6 +3395,94 @@ public final class Service {
      */
     org.mlflow.api.proto.Service.RunTagOrBuilder getTagsOrBuilder(
         int index);
+
+    /**
+     * <pre>
+     * Run metrics (minimum values).
+     * </pre>
+     *
+     * <code>repeated .mlflow.Metric metric_minimums = 4;</code>
+     */
+    java.util.List<org.mlflow.api.proto.Service.Metric> 
+        getMetricMinimumsList();
+    /**
+     * <pre>
+     * Run metrics (minimum values).
+     * </pre>
+     *
+     * <code>repeated .mlflow.Metric metric_minimums = 4;</code>
+     */
+    org.mlflow.api.proto.Service.Metric getMetricMinimums(int index);
+    /**
+     * <pre>
+     * Run metrics (minimum values).
+     * </pre>
+     *
+     * <code>repeated .mlflow.Metric metric_minimums = 4;</code>
+     */
+    int getMetricMinimumsCount();
+    /**
+     * <pre>
+     * Run metrics (minimum values).
+     * </pre>
+     *
+     * <code>repeated .mlflow.Metric metric_minimums = 4;</code>
+     */
+    java.util.List<? extends org.mlflow.api.proto.Service.MetricOrBuilder> 
+        getMetricMinimumsOrBuilderList();
+    /**
+     * <pre>
+     * Run metrics (minimum values).
+     * </pre>
+     *
+     * <code>repeated .mlflow.Metric metric_minimums = 4;</code>
+     */
+    org.mlflow.api.proto.Service.MetricOrBuilder getMetricMinimumsOrBuilder(
+        int index);
+
+    /**
+     * <pre>
+     * Run metrics (maximum values).
+     * </pre>
+     *
+     * <code>repeated .mlflow.Metric metric_maximums = 5;</code>
+     */
+    java.util.List<org.mlflow.api.proto.Service.Metric> 
+        getMetricMaximumsList();
+    /**
+     * <pre>
+     * Run metrics (maximum values).
+     * </pre>
+     *
+     * <code>repeated .mlflow.Metric metric_maximums = 5;</code>
+     */
+    org.mlflow.api.proto.Service.Metric getMetricMaximums(int index);
+    /**
+     * <pre>
+     * Run metrics (maximum values).
+     * </pre>
+     *
+     * <code>repeated .mlflow.Metric metric_maximums = 5;</code>
+     */
+    int getMetricMaximumsCount();
+    /**
+     * <pre>
+     * Run metrics (maximum values).
+     * </pre>
+     *
+     * <code>repeated .mlflow.Metric metric_maximums = 5;</code>
+     */
+    java.util.List<? extends org.mlflow.api.proto.Service.MetricOrBuilder> 
+        getMetricMaximumsOrBuilderList();
+    /**
+     * <pre>
+     * Run metrics (maximum values).
+     * </pre>
+     *
+     * <code>repeated .mlflow.Metric metric_maximums = 5;</code>
+     */
+    org.mlflow.api.proto.Service.MetricOrBuilder getMetricMaximumsOrBuilder(
+        int index);
   }
   /**
    * <pre>
@@ -3416,6 +3504,8 @@ public final class Service {
       metrics_ = java.util.Collections.emptyList();
       params_ = java.util.Collections.emptyList();
       tags_ = java.util.Collections.emptyList();
+      metricMinimums_ = java.util.Collections.emptyList();
+      metricMaximums_ = java.util.Collections.emptyList();
     }
 
     @java.lang.Override
@@ -3469,6 +3559,24 @@ public final class Service {
                   input.readMessage(org.mlflow.api.proto.Service.RunTag.PARSER, extensionRegistry));
               break;
             }
+            case 34: {
+              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+                metricMinimums_ = new java.util.ArrayList<org.mlflow.api.proto.Service.Metric>();
+                mutable_bitField0_ |= 0x00000008;
+              }
+              metricMinimums_.add(
+                  input.readMessage(org.mlflow.api.proto.Service.Metric.PARSER, extensionRegistry));
+              break;
+            }
+            case 42: {
+              if (!((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+                metricMaximums_ = new java.util.ArrayList<org.mlflow.api.proto.Service.Metric>();
+                mutable_bitField0_ |= 0x00000010;
+              }
+              metricMaximums_.add(
+                  input.readMessage(org.mlflow.api.proto.Service.Metric.PARSER, extensionRegistry));
+              break;
+            }
             default: {
               if (!parseUnknownField(
                   input, unknownFields, extensionRegistry, tag)) {
@@ -3493,6 +3601,12 @@ public final class Service {
         if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
           tags_ = java.util.Collections.unmodifiableList(tags_);
         }
+        if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+          metricMinimums_ = java.util.Collections.unmodifiableList(metricMinimums_);
+        }
+        if (((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+          metricMaximums_ = java.util.Collections.unmodifiableList(metricMaximums_);
+        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -3514,7 +3628,7 @@ public final class Service {
     private java.util.List<org.mlflow.api.proto.Service.Metric> metrics_;
     /**
      * <pre>
-     * Run metrics.
+     * Run metrics (latest values).
      * </pre>
      *
      * <code>repeated .mlflow.Metric metrics = 1;</code>
@@ -3524,7 +3638,7 @@ public final class Service {
     }
     /**
      * <pre>
-     * Run metrics.
+     * Run metrics (latest values).
      * </pre>
      *
      * <code>repeated .mlflow.Metric metrics = 1;</code>
@@ -3535,7 +3649,7 @@ public final class Service {
     }
     /**
      * <pre>
-     * Run metrics.
+     * Run metrics (latest values).
      * </pre>
      *
      * <code>repeated .mlflow.Metric metrics = 1;</code>
@@ -3545,7 +3659,7 @@ public final class Service {
     }
     /**
      * <pre>
-     * Run metrics.
+     * Run metrics (latest values).
      * </pre>
      *
      * <code>repeated .mlflow.Metric metrics = 1;</code>
@@ -3555,7 +3669,7 @@ public final class Service {
     }
     /**
      * <pre>
-     * Run metrics.
+     * Run metrics (latest values).
      * </pre>
      *
      * <code>repeated .mlflow.Metric metrics = 1;</code>
@@ -3675,6 +3789,116 @@ public final class Service {
       return tags_.get(index);
     }
 
+    public static final int METRIC_MINIMUMS_FIELD_NUMBER = 4;
+    private java.util.List<org.mlflow.api.proto.Service.Metric> metricMinimums_;
+    /**
+     * <pre>
+     * Run metrics (minimum values).
+     * </pre>
+     *
+     * <code>repeated .mlflow.Metric metric_minimums = 4;</code>
+     */
+    public java.util.List<org.mlflow.api.proto.Service.Metric> getMetricMinimumsList() {
+      return metricMinimums_;
+    }
+    /**
+     * <pre>
+     * Run metrics (minimum values).
+     * </pre>
+     *
+     * <code>repeated .mlflow.Metric metric_minimums = 4;</code>
+     */
+    public java.util.List<? extends org.mlflow.api.proto.Service.MetricOrBuilder> 
+        getMetricMinimumsOrBuilderList() {
+      return metricMinimums_;
+    }
+    /**
+     * <pre>
+     * Run metrics (minimum values).
+     * </pre>
+     *
+     * <code>repeated .mlflow.Metric metric_minimums = 4;</code>
+     */
+    public int getMetricMinimumsCount() {
+      return metricMinimums_.size();
+    }
+    /**
+     * <pre>
+     * Run metrics (minimum values).
+     * </pre>
+     *
+     * <code>repeated .mlflow.Metric metric_minimums = 4;</code>
+     */
+    public org.mlflow.api.proto.Service.Metric getMetricMinimums(int index) {
+      return metricMinimums_.get(index);
+    }
+    /**
+     * <pre>
+     * Run metrics (minimum values).
+     * </pre>
+     *
+     * <code>repeated .mlflow.Metric metric_minimums = 4;</code>
+     */
+    public org.mlflow.api.proto.Service.MetricOrBuilder getMetricMinimumsOrBuilder(
+        int index) {
+      return metricMinimums_.get(index);
+    }
+
+    public static final int METRIC_MAXIMUMS_FIELD_NUMBER = 5;
+    private java.util.List<org.mlflow.api.proto.Service.Metric> metricMaximums_;
+    /**
+     * <pre>
+     * Run metrics (maximum values).
+     * </pre>
+     *
+     * <code>repeated .mlflow.Metric metric_maximums = 5;</code>
+     */
+    public java.util.List<org.mlflow.api.proto.Service.Metric> getMetricMaximumsList() {
+      return metricMaximums_;
+    }
+    /**
+     * <pre>
+     * Run metrics (maximum values).
+     * </pre>
+     *
+     * <code>repeated .mlflow.Metric metric_maximums = 5;</code>
+     */
+    public java.util.List<? extends org.mlflow.api.proto.Service.MetricOrBuilder> 
+        getMetricMaximumsOrBuilderList() {
+      return metricMaximums_;
+    }
+    /**
+     * <pre>
+     * Run metrics (maximum values).
+     * </pre>
+     *
+     * <code>repeated .mlflow.Metric metric_maximums = 5;</code>
+     */
+    public int getMetricMaximumsCount() {
+      return metricMaximums_.size();
+    }
+    /**
+     * <pre>
+     * Run metrics (maximum values).
+     * </pre>
+     *
+     * <code>repeated .mlflow.Metric metric_maximums = 5;</code>
+     */
+    public org.mlflow.api.proto.Service.Metric getMetricMaximums(int index) {
+      return metricMaximums_.get(index);
+    }
+    /**
+     * <pre>
+     * Run metrics (maximum values).
+     * </pre>
+     *
+     * <code>repeated .mlflow.Metric metric_maximums = 5;</code>
+     */
+    public org.mlflow.api.proto.Service.MetricOrBuilder getMetricMaximumsOrBuilder(
+        int index) {
+      return metricMaximums_.get(index);
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -3698,6 +3922,12 @@ public final class Service {
       for (int i = 0; i < tags_.size(); i++) {
         output.writeMessage(3, tags_.get(i));
       }
+      for (int i = 0; i < metricMinimums_.size(); i++) {
+        output.writeMessage(4, metricMinimums_.get(i));
+      }
+      for (int i = 0; i < metricMaximums_.size(); i++) {
+        output.writeMessage(5, metricMaximums_.get(i));
+      }
       unknownFields.writeTo(output);
     }
 
@@ -3718,6 +3948,14 @@ public final class Service {
       for (int i = 0; i < tags_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(3, tags_.get(i));
+      }
+      for (int i = 0; i < metricMinimums_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(4, metricMinimums_.get(i));
+      }
+      for (int i = 0; i < metricMaximums_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(5, metricMaximums_.get(i));
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -3741,6 +3979,10 @@ public final class Service {
           .equals(other.getParamsList());
       result = result && getTagsList()
           .equals(other.getTagsList());
+      result = result && getMetricMinimumsList()
+          .equals(other.getMetricMinimumsList());
+      result = result && getMetricMaximumsList()
+          .equals(other.getMetricMaximumsList());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -3763,6 +4005,14 @@ public final class Service {
       if (getTagsCount() > 0) {
         hash = (37 * hash) + TAGS_FIELD_NUMBER;
         hash = (53 * hash) + getTagsList().hashCode();
+      }
+      if (getMetricMinimumsCount() > 0) {
+        hash = (37 * hash) + METRIC_MINIMUMS_FIELD_NUMBER;
+        hash = (53 * hash) + getMetricMinimumsList().hashCode();
+      }
+      if (getMetricMaximumsCount() > 0) {
+        hash = (37 * hash) + METRIC_MAXIMUMS_FIELD_NUMBER;
+        hash = (53 * hash) + getMetricMaximumsList().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -3899,6 +4149,8 @@ public final class Service {
           getMetricsFieldBuilder();
           getParamsFieldBuilder();
           getTagsFieldBuilder();
+          getMetricMinimumsFieldBuilder();
+          getMetricMaximumsFieldBuilder();
         }
       }
       @java.lang.Override
@@ -3921,6 +4173,18 @@ public final class Service {
           bitField0_ = (bitField0_ & ~0x00000004);
         } else {
           tagsBuilder_.clear();
+        }
+        if (metricMinimumsBuilder_ == null) {
+          metricMinimums_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
+        } else {
+          metricMinimumsBuilder_.clear();
+        }
+        if (metricMaximumsBuilder_ == null) {
+          metricMaximums_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000010);
+        } else {
+          metricMaximumsBuilder_.clear();
         }
         return this;
       }
@@ -3975,6 +4239,24 @@ public final class Service {
           result.tags_ = tags_;
         } else {
           result.tags_ = tagsBuilder_.build();
+        }
+        if (metricMinimumsBuilder_ == null) {
+          if (((bitField0_ & 0x00000008) == 0x00000008)) {
+            metricMinimums_ = java.util.Collections.unmodifiableList(metricMinimums_);
+            bitField0_ = (bitField0_ & ~0x00000008);
+          }
+          result.metricMinimums_ = metricMinimums_;
+        } else {
+          result.metricMinimums_ = metricMinimumsBuilder_.build();
+        }
+        if (metricMaximumsBuilder_ == null) {
+          if (((bitField0_ & 0x00000010) == 0x00000010)) {
+            metricMaximums_ = java.util.Collections.unmodifiableList(metricMaximums_);
+            bitField0_ = (bitField0_ & ~0x00000010);
+          }
+          result.metricMaximums_ = metricMaximums_;
+        } else {
+          result.metricMaximums_ = metricMaximumsBuilder_.build();
         }
         onBuilt();
         return result;
@@ -4102,6 +4384,58 @@ public final class Service {
             }
           }
         }
+        if (metricMinimumsBuilder_ == null) {
+          if (!other.metricMinimums_.isEmpty()) {
+            if (metricMinimums_.isEmpty()) {
+              metricMinimums_ = other.metricMinimums_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+            } else {
+              ensureMetricMinimumsIsMutable();
+              metricMinimums_.addAll(other.metricMinimums_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.metricMinimums_.isEmpty()) {
+            if (metricMinimumsBuilder_.isEmpty()) {
+              metricMinimumsBuilder_.dispose();
+              metricMinimumsBuilder_ = null;
+              metricMinimums_ = other.metricMinimums_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+              metricMinimumsBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getMetricMinimumsFieldBuilder() : null;
+            } else {
+              metricMinimumsBuilder_.addAllMessages(other.metricMinimums_);
+            }
+          }
+        }
+        if (metricMaximumsBuilder_ == null) {
+          if (!other.metricMaximums_.isEmpty()) {
+            if (metricMaximums_.isEmpty()) {
+              metricMaximums_ = other.metricMaximums_;
+              bitField0_ = (bitField0_ & ~0x00000010);
+            } else {
+              ensureMetricMaximumsIsMutable();
+              metricMaximums_.addAll(other.metricMaximums_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.metricMaximums_.isEmpty()) {
+            if (metricMaximumsBuilder_.isEmpty()) {
+              metricMaximumsBuilder_.dispose();
+              metricMaximumsBuilder_ = null;
+              metricMaximums_ = other.metricMaximums_;
+              bitField0_ = (bitField0_ & ~0x00000010);
+              metricMaximumsBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getMetricMaximumsFieldBuilder() : null;
+            } else {
+              metricMaximumsBuilder_.addAllMessages(other.metricMaximums_);
+            }
+          }
+        }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
@@ -4146,7 +4480,7 @@ public final class Service {
 
       /**
        * <pre>
-       * Run metrics.
+       * Run metrics (latest values).
        * </pre>
        *
        * <code>repeated .mlflow.Metric metrics = 1;</code>
@@ -4160,7 +4494,7 @@ public final class Service {
       }
       /**
        * <pre>
-       * Run metrics.
+       * Run metrics (latest values).
        * </pre>
        *
        * <code>repeated .mlflow.Metric metrics = 1;</code>
@@ -4174,7 +4508,7 @@ public final class Service {
       }
       /**
        * <pre>
-       * Run metrics.
+       * Run metrics (latest values).
        * </pre>
        *
        * <code>repeated .mlflow.Metric metrics = 1;</code>
@@ -4188,7 +4522,7 @@ public final class Service {
       }
       /**
        * <pre>
-       * Run metrics.
+       * Run metrics (latest values).
        * </pre>
        *
        * <code>repeated .mlflow.Metric metrics = 1;</code>
@@ -4209,7 +4543,7 @@ public final class Service {
       }
       /**
        * <pre>
-       * Run metrics.
+       * Run metrics (latest values).
        * </pre>
        *
        * <code>repeated .mlflow.Metric metrics = 1;</code>
@@ -4227,7 +4561,7 @@ public final class Service {
       }
       /**
        * <pre>
-       * Run metrics.
+       * Run metrics (latest values).
        * </pre>
        *
        * <code>repeated .mlflow.Metric metrics = 1;</code>
@@ -4247,7 +4581,7 @@ public final class Service {
       }
       /**
        * <pre>
-       * Run metrics.
+       * Run metrics (latest values).
        * </pre>
        *
        * <code>repeated .mlflow.Metric metrics = 1;</code>
@@ -4268,7 +4602,7 @@ public final class Service {
       }
       /**
        * <pre>
-       * Run metrics.
+       * Run metrics (latest values).
        * </pre>
        *
        * <code>repeated .mlflow.Metric metrics = 1;</code>
@@ -4286,7 +4620,7 @@ public final class Service {
       }
       /**
        * <pre>
-       * Run metrics.
+       * Run metrics (latest values).
        * </pre>
        *
        * <code>repeated .mlflow.Metric metrics = 1;</code>
@@ -4304,7 +4638,7 @@ public final class Service {
       }
       /**
        * <pre>
-       * Run metrics.
+       * Run metrics (latest values).
        * </pre>
        *
        * <code>repeated .mlflow.Metric metrics = 1;</code>
@@ -4323,7 +4657,7 @@ public final class Service {
       }
       /**
        * <pre>
-       * Run metrics.
+       * Run metrics (latest values).
        * </pre>
        *
        * <code>repeated .mlflow.Metric metrics = 1;</code>
@@ -4340,7 +4674,7 @@ public final class Service {
       }
       /**
        * <pre>
-       * Run metrics.
+       * Run metrics (latest values).
        * </pre>
        *
        * <code>repeated .mlflow.Metric metrics = 1;</code>
@@ -4357,7 +4691,7 @@ public final class Service {
       }
       /**
        * <pre>
-       * Run metrics.
+       * Run metrics (latest values).
        * </pre>
        *
        * <code>repeated .mlflow.Metric metrics = 1;</code>
@@ -4368,7 +4702,7 @@ public final class Service {
       }
       /**
        * <pre>
-       * Run metrics.
+       * Run metrics (latest values).
        * </pre>
        *
        * <code>repeated .mlflow.Metric metrics = 1;</code>
@@ -4382,7 +4716,7 @@ public final class Service {
       }
       /**
        * <pre>
-       * Run metrics.
+       * Run metrics (latest values).
        * </pre>
        *
        * <code>repeated .mlflow.Metric metrics = 1;</code>
@@ -4397,7 +4731,7 @@ public final class Service {
       }
       /**
        * <pre>
-       * Run metrics.
+       * Run metrics (latest values).
        * </pre>
        *
        * <code>repeated .mlflow.Metric metrics = 1;</code>
@@ -4408,7 +4742,7 @@ public final class Service {
       }
       /**
        * <pre>
-       * Run metrics.
+       * Run metrics (latest values).
        * </pre>
        *
        * <code>repeated .mlflow.Metric metrics = 1;</code>
@@ -4420,7 +4754,7 @@ public final class Service {
       }
       /**
        * <pre>
-       * Run metrics.
+       * Run metrics (latest values).
        * </pre>
        *
        * <code>repeated .mlflow.Metric metrics = 1;</code>
@@ -5066,6 +5400,630 @@ public final class Service {
           tags_ = null;
         }
         return tagsBuilder_;
+      }
+
+      private java.util.List<org.mlflow.api.proto.Service.Metric> metricMinimums_ =
+        java.util.Collections.emptyList();
+      private void ensureMetricMinimumsIsMutable() {
+        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
+          metricMinimums_ = new java.util.ArrayList<org.mlflow.api.proto.Service.Metric>(metricMinimums_);
+          bitField0_ |= 0x00000008;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          org.mlflow.api.proto.Service.Metric, org.mlflow.api.proto.Service.Metric.Builder, org.mlflow.api.proto.Service.MetricOrBuilder> metricMinimumsBuilder_;
+
+      /**
+       * <pre>
+       * Run metrics (minimum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_minimums = 4;</code>
+       */
+      public java.util.List<org.mlflow.api.proto.Service.Metric> getMetricMinimumsList() {
+        if (metricMinimumsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(metricMinimums_);
+        } else {
+          return metricMinimumsBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <pre>
+       * Run metrics (minimum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_minimums = 4;</code>
+       */
+      public int getMetricMinimumsCount() {
+        if (metricMinimumsBuilder_ == null) {
+          return metricMinimums_.size();
+        } else {
+          return metricMinimumsBuilder_.getCount();
+        }
+      }
+      /**
+       * <pre>
+       * Run metrics (minimum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_minimums = 4;</code>
+       */
+      public org.mlflow.api.proto.Service.Metric getMetricMinimums(int index) {
+        if (metricMinimumsBuilder_ == null) {
+          return metricMinimums_.get(index);
+        } else {
+          return metricMinimumsBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <pre>
+       * Run metrics (minimum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_minimums = 4;</code>
+       */
+      public Builder setMetricMinimums(
+          int index, org.mlflow.api.proto.Service.Metric value) {
+        if (metricMinimumsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureMetricMinimumsIsMutable();
+          metricMinimums_.set(index, value);
+          onChanged();
+        } else {
+          metricMinimumsBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Run metrics (minimum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_minimums = 4;</code>
+       */
+      public Builder setMetricMinimums(
+          int index, org.mlflow.api.proto.Service.Metric.Builder builderForValue) {
+        if (metricMinimumsBuilder_ == null) {
+          ensureMetricMinimumsIsMutable();
+          metricMinimums_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          metricMinimumsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Run metrics (minimum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_minimums = 4;</code>
+       */
+      public Builder addMetricMinimums(org.mlflow.api.proto.Service.Metric value) {
+        if (metricMinimumsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureMetricMinimumsIsMutable();
+          metricMinimums_.add(value);
+          onChanged();
+        } else {
+          metricMinimumsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Run metrics (minimum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_minimums = 4;</code>
+       */
+      public Builder addMetricMinimums(
+          int index, org.mlflow.api.proto.Service.Metric value) {
+        if (metricMinimumsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureMetricMinimumsIsMutable();
+          metricMinimums_.add(index, value);
+          onChanged();
+        } else {
+          metricMinimumsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Run metrics (minimum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_minimums = 4;</code>
+       */
+      public Builder addMetricMinimums(
+          org.mlflow.api.proto.Service.Metric.Builder builderForValue) {
+        if (metricMinimumsBuilder_ == null) {
+          ensureMetricMinimumsIsMutable();
+          metricMinimums_.add(builderForValue.build());
+          onChanged();
+        } else {
+          metricMinimumsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Run metrics (minimum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_minimums = 4;</code>
+       */
+      public Builder addMetricMinimums(
+          int index, org.mlflow.api.proto.Service.Metric.Builder builderForValue) {
+        if (metricMinimumsBuilder_ == null) {
+          ensureMetricMinimumsIsMutable();
+          metricMinimums_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          metricMinimumsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Run metrics (minimum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_minimums = 4;</code>
+       */
+      public Builder addAllMetricMinimums(
+          java.lang.Iterable<? extends org.mlflow.api.proto.Service.Metric> values) {
+        if (metricMinimumsBuilder_ == null) {
+          ensureMetricMinimumsIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, metricMinimums_);
+          onChanged();
+        } else {
+          metricMinimumsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Run metrics (minimum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_minimums = 4;</code>
+       */
+      public Builder clearMetricMinimums() {
+        if (metricMinimumsBuilder_ == null) {
+          metricMinimums_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
+          onChanged();
+        } else {
+          metricMinimumsBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Run metrics (minimum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_minimums = 4;</code>
+       */
+      public Builder removeMetricMinimums(int index) {
+        if (metricMinimumsBuilder_ == null) {
+          ensureMetricMinimumsIsMutable();
+          metricMinimums_.remove(index);
+          onChanged();
+        } else {
+          metricMinimumsBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Run metrics (minimum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_minimums = 4;</code>
+       */
+      public org.mlflow.api.proto.Service.Metric.Builder getMetricMinimumsBuilder(
+          int index) {
+        return getMetricMinimumsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <pre>
+       * Run metrics (minimum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_minimums = 4;</code>
+       */
+      public org.mlflow.api.proto.Service.MetricOrBuilder getMetricMinimumsOrBuilder(
+          int index) {
+        if (metricMinimumsBuilder_ == null) {
+          return metricMinimums_.get(index);  } else {
+          return metricMinimumsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <pre>
+       * Run metrics (minimum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_minimums = 4;</code>
+       */
+      public java.util.List<? extends org.mlflow.api.proto.Service.MetricOrBuilder> 
+           getMetricMinimumsOrBuilderList() {
+        if (metricMinimumsBuilder_ != null) {
+          return metricMinimumsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(metricMinimums_);
+        }
+      }
+      /**
+       * <pre>
+       * Run metrics (minimum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_minimums = 4;</code>
+       */
+      public org.mlflow.api.proto.Service.Metric.Builder addMetricMinimumsBuilder() {
+        return getMetricMinimumsFieldBuilder().addBuilder(
+            org.mlflow.api.proto.Service.Metric.getDefaultInstance());
+      }
+      /**
+       * <pre>
+       * Run metrics (minimum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_minimums = 4;</code>
+       */
+      public org.mlflow.api.proto.Service.Metric.Builder addMetricMinimumsBuilder(
+          int index) {
+        return getMetricMinimumsFieldBuilder().addBuilder(
+            index, org.mlflow.api.proto.Service.Metric.getDefaultInstance());
+      }
+      /**
+       * <pre>
+       * Run metrics (minimum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_minimums = 4;</code>
+       */
+      public java.util.List<org.mlflow.api.proto.Service.Metric.Builder> 
+           getMetricMinimumsBuilderList() {
+        return getMetricMinimumsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          org.mlflow.api.proto.Service.Metric, org.mlflow.api.proto.Service.Metric.Builder, org.mlflow.api.proto.Service.MetricOrBuilder> 
+          getMetricMinimumsFieldBuilder() {
+        if (metricMinimumsBuilder_ == null) {
+          metricMinimumsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              org.mlflow.api.proto.Service.Metric, org.mlflow.api.proto.Service.Metric.Builder, org.mlflow.api.proto.Service.MetricOrBuilder>(
+                  metricMinimums_,
+                  ((bitField0_ & 0x00000008) == 0x00000008),
+                  getParentForChildren(),
+                  isClean());
+          metricMinimums_ = null;
+        }
+        return metricMinimumsBuilder_;
+      }
+
+      private java.util.List<org.mlflow.api.proto.Service.Metric> metricMaximums_ =
+        java.util.Collections.emptyList();
+      private void ensureMetricMaximumsIsMutable() {
+        if (!((bitField0_ & 0x00000010) == 0x00000010)) {
+          metricMaximums_ = new java.util.ArrayList<org.mlflow.api.proto.Service.Metric>(metricMaximums_);
+          bitField0_ |= 0x00000010;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          org.mlflow.api.proto.Service.Metric, org.mlflow.api.proto.Service.Metric.Builder, org.mlflow.api.proto.Service.MetricOrBuilder> metricMaximumsBuilder_;
+
+      /**
+       * <pre>
+       * Run metrics (maximum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_maximums = 5;</code>
+       */
+      public java.util.List<org.mlflow.api.proto.Service.Metric> getMetricMaximumsList() {
+        if (metricMaximumsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(metricMaximums_);
+        } else {
+          return metricMaximumsBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <pre>
+       * Run metrics (maximum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_maximums = 5;</code>
+       */
+      public int getMetricMaximumsCount() {
+        if (metricMaximumsBuilder_ == null) {
+          return metricMaximums_.size();
+        } else {
+          return metricMaximumsBuilder_.getCount();
+        }
+      }
+      /**
+       * <pre>
+       * Run metrics (maximum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_maximums = 5;</code>
+       */
+      public org.mlflow.api.proto.Service.Metric getMetricMaximums(int index) {
+        if (metricMaximumsBuilder_ == null) {
+          return metricMaximums_.get(index);
+        } else {
+          return metricMaximumsBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <pre>
+       * Run metrics (maximum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_maximums = 5;</code>
+       */
+      public Builder setMetricMaximums(
+          int index, org.mlflow.api.proto.Service.Metric value) {
+        if (metricMaximumsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureMetricMaximumsIsMutable();
+          metricMaximums_.set(index, value);
+          onChanged();
+        } else {
+          metricMaximumsBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Run metrics (maximum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_maximums = 5;</code>
+       */
+      public Builder setMetricMaximums(
+          int index, org.mlflow.api.proto.Service.Metric.Builder builderForValue) {
+        if (metricMaximumsBuilder_ == null) {
+          ensureMetricMaximumsIsMutable();
+          metricMaximums_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          metricMaximumsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Run metrics (maximum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_maximums = 5;</code>
+       */
+      public Builder addMetricMaximums(org.mlflow.api.proto.Service.Metric value) {
+        if (metricMaximumsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureMetricMaximumsIsMutable();
+          metricMaximums_.add(value);
+          onChanged();
+        } else {
+          metricMaximumsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Run metrics (maximum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_maximums = 5;</code>
+       */
+      public Builder addMetricMaximums(
+          int index, org.mlflow.api.proto.Service.Metric value) {
+        if (metricMaximumsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureMetricMaximumsIsMutable();
+          metricMaximums_.add(index, value);
+          onChanged();
+        } else {
+          metricMaximumsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Run metrics (maximum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_maximums = 5;</code>
+       */
+      public Builder addMetricMaximums(
+          org.mlflow.api.proto.Service.Metric.Builder builderForValue) {
+        if (metricMaximumsBuilder_ == null) {
+          ensureMetricMaximumsIsMutable();
+          metricMaximums_.add(builderForValue.build());
+          onChanged();
+        } else {
+          metricMaximumsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Run metrics (maximum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_maximums = 5;</code>
+       */
+      public Builder addMetricMaximums(
+          int index, org.mlflow.api.proto.Service.Metric.Builder builderForValue) {
+        if (metricMaximumsBuilder_ == null) {
+          ensureMetricMaximumsIsMutable();
+          metricMaximums_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          metricMaximumsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Run metrics (maximum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_maximums = 5;</code>
+       */
+      public Builder addAllMetricMaximums(
+          java.lang.Iterable<? extends org.mlflow.api.proto.Service.Metric> values) {
+        if (metricMaximumsBuilder_ == null) {
+          ensureMetricMaximumsIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, metricMaximums_);
+          onChanged();
+        } else {
+          metricMaximumsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Run metrics (maximum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_maximums = 5;</code>
+       */
+      public Builder clearMetricMaximums() {
+        if (metricMaximumsBuilder_ == null) {
+          metricMaximums_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000010);
+          onChanged();
+        } else {
+          metricMaximumsBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Run metrics (maximum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_maximums = 5;</code>
+       */
+      public Builder removeMetricMaximums(int index) {
+        if (metricMaximumsBuilder_ == null) {
+          ensureMetricMaximumsIsMutable();
+          metricMaximums_.remove(index);
+          onChanged();
+        } else {
+          metricMaximumsBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Run metrics (maximum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_maximums = 5;</code>
+       */
+      public org.mlflow.api.proto.Service.Metric.Builder getMetricMaximumsBuilder(
+          int index) {
+        return getMetricMaximumsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <pre>
+       * Run metrics (maximum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_maximums = 5;</code>
+       */
+      public org.mlflow.api.proto.Service.MetricOrBuilder getMetricMaximumsOrBuilder(
+          int index) {
+        if (metricMaximumsBuilder_ == null) {
+          return metricMaximums_.get(index);  } else {
+          return metricMaximumsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <pre>
+       * Run metrics (maximum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_maximums = 5;</code>
+       */
+      public java.util.List<? extends org.mlflow.api.proto.Service.MetricOrBuilder> 
+           getMetricMaximumsOrBuilderList() {
+        if (metricMaximumsBuilder_ != null) {
+          return metricMaximumsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(metricMaximums_);
+        }
+      }
+      /**
+       * <pre>
+       * Run metrics (maximum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_maximums = 5;</code>
+       */
+      public org.mlflow.api.proto.Service.Metric.Builder addMetricMaximumsBuilder() {
+        return getMetricMaximumsFieldBuilder().addBuilder(
+            org.mlflow.api.proto.Service.Metric.getDefaultInstance());
+      }
+      /**
+       * <pre>
+       * Run metrics (maximum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_maximums = 5;</code>
+       */
+      public org.mlflow.api.proto.Service.Metric.Builder addMetricMaximumsBuilder(
+          int index) {
+        return getMetricMaximumsFieldBuilder().addBuilder(
+            index, org.mlflow.api.proto.Service.Metric.getDefaultInstance());
+      }
+      /**
+       * <pre>
+       * Run metrics (maximum values).
+       * </pre>
+       *
+       * <code>repeated .mlflow.Metric metric_maximums = 5;</code>
+       */
+      public java.util.List<org.mlflow.api.proto.Service.Metric.Builder> 
+           getMetricMaximumsBuilderList() {
+        return getMetricMaximumsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          org.mlflow.api.proto.Service.Metric, org.mlflow.api.proto.Service.Metric.Builder, org.mlflow.api.proto.Service.MetricOrBuilder> 
+          getMetricMaximumsFieldBuilder() {
+        if (metricMaximumsBuilder_ == null) {
+          metricMaximumsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              org.mlflow.api.proto.Service.Metric, org.mlflow.api.proto.Service.Metric.Builder, org.mlflow.api.proto.Service.MetricOrBuilder>(
+                  metricMaximums_,
+                  ((bitField0_ & 0x00000010) == 0x00000010),
+                  getParentForChildren(),
+                  isClean());
+          metricMaximums_ = null;
+        }
+        return metricMaximumsBuilder_;
       }
       @java.lang.Override
       public final Builder setUnknownFields(
@@ -49477,214 +50435,216 @@ public final class Service {
       "\003\022\017\n\004step\030\004 \001(\003:\0010\"#\n\005Param\022\013\n\003key\030\001 \001(\t" +
       "\022\r\n\005value\030\002 \001(\t\"C\n\003Run\022\035\n\004info\030\001 \001(\0132\017.m" +
       "lflow.RunInfo\022\035\n\004data\030\002 \001(\0132\017.mlflow.Run" +
-      "Data\"g\n\007RunData\022\037\n\007metrics\030\001 \003(\0132\016.mlflo" +
-      "w.Metric\022\035\n\006params\030\002 \003(\0132\r.mlflow.Param\022" +
-      "\034\n\004tags\030\003 \003(\0132\016.mlflow.RunTag\"$\n\006RunTag\022" +
-      "\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t\"+\n\rExperimen" +
-      "tTag\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t\"\313\001\n\007Run" +
-      "Info\022\016\n\006run_id\030\017 \001(\t\022\020\n\010run_uuid\030\001 \001(\t\022\025" +
-      "\n\rexperiment_id\030\002 \001(\t\022\017\n\007user_id\030\006 \001(\t\022!" +
-      "\n\006status\030\007 \001(\0162\021.mlflow.RunStatus\022\022\n\nsta" +
-      "rt_time\030\010 \001(\003\022\020\n\010end_time\030\t \001(\003\022\024\n\014artif" +
-      "act_uri\030\r \001(\t\022\027\n\017lifecycle_stage\030\016 \001(\t\"\273" +
-      "\001\n\nExperiment\022\025\n\rexperiment_id\030\001 \001(\t\022\014\n\004" +
-      "name\030\002 \001(\t\022\031\n\021artifact_location\030\003 \001(\t\022\027\n" +
-      "\017lifecycle_stage\030\004 \001(\t\022\030\n\020last_update_ti" +
-      "me\030\005 \001(\003\022\025\n\rcreation_time\030\006 \001(\003\022#\n\004tags\030" +
-      "\007 \003(\0132\025.mlflow.ExperimentTag\"\266\001\n\020CreateE" +
-      "xperiment\022\022\n\004name\030\001 \001(\tB\004\370\206\031\001\022\031\n\021artifac" +
-      "t_location\030\002 \001(\t\022#\n\004tags\030\003 \003(\0132\025.mlflow." +
-      "ExperimentTag\032!\n\010Response\022\025\n\rexperiment_" +
-      "id\030\001 \001(\t:+\342?(\n&com.databricks.rpc.RPC[$t" +
-      "his.Response]\"\332\001\n\017ListExperiments\022#\n\tvie" +
-      "w_type\030\001 \001(\0162\020.mlflow.ViewType\022\023\n\013max_re" +
-      "sults\030\002 \001(\003\022\022\n\npage_token\030\003 \001(\t\032L\n\010Respo" +
-      "nse\022\'\n\013experiments\030\001 \003(\0132\022.mlflow.Experi" +
-      "ment\022\027\n\017next_page_token\030\002 \001(\t:+\342?(\n&com." +
-      "databricks.rpc.RPC[$this.Response]\"\260\001\n\rG" +
-      "etExperiment\022\033\n\rexperiment_id\030\001 \001(\tB\004\370\206\031" +
-      "\001\032U\n\010Response\022&\n\nexperiment\030\001 \001(\0132\022.mlfl" +
-      "ow.Experiment\022!\n\004runs\030\002 \003(\0132\017.mlflow.Run" +
-      "InfoB\002\030\001:+\342?(\n&com.databricks.rpc.RPC[$t" +
-      "his.Response]\"h\n\020DeleteExperiment\022\033\n\rexp" +
-      "eriment_id\030\001 \001(\tB\004\370\206\031\001\032\n\n\010Response:+\342?(\n" +
-      "&com.databricks.rpc.RPC[$this.Response]\"" +
-      "i\n\021RestoreExperiment\022\033\n\rexperiment_id\030\001 " +
-      "\001(\tB\004\370\206\031\001\032\n\n\010Response:+\342?(\n&com.databric" +
-      "ks.rpc.RPC[$this.Response]\"z\n\020UpdateExpe" +
-      "riment\022\033\n\rexperiment_id\030\001 \001(\tB\004\370\206\031\001\022\020\n\010n" +
-      "ew_name\030\002 \001(\t\032\n\n\010Response:+\342?(\n&com.data" +
-      "bricks.rpc.RPC[$this.Response]\"\270\001\n\tCreat" +
-      "eRun\022\025\n\rexperiment_id\030\001 \001(\t\022\017\n\007user_id\030\002" +
-      " \001(\t\022\022\n\nstart_time\030\007 \001(\003\022\034\n\004tags\030\t \003(\0132\016" +
-      ".mlflow.RunTag\032$\n\010Response\022\030\n\003run\030\001 \001(\0132" +
-      "\013.mlflow.Run:+\342?(\n&com.databricks.rpc.RP" +
-      "C[$this.Response]\"\276\001\n\tUpdateRun\022\016\n\006run_i" +
-      "d\030\004 \001(\t\022\020\n\010run_uuid\030\001 \001(\t\022!\n\006status\030\002 \001(" +
-      "\0162\021.mlflow.RunStatus\022\020\n\010end_time\030\003 \001(\003\032-" +
-      "\n\010Response\022!\n\010run_info\030\001 \001(\0132\017.mlflow.Ru" +
-      "nInfo:+\342?(\n&com.databricks.rpc.RPC[$this" +
-      ".Response]\"Z\n\tDeleteRun\022\024\n\006run_id\030\001 \001(\tB" +
-      "\004\370\206\031\001\032\n\n\010Response:+\342?(\n&com.databricks.r" +
-      "pc.RPC[$this.Response]\"[\n\nRestoreRun\022\024\n\006" +
-      "run_id\030\001 \001(\tB\004\370\206\031\001\032\n\n\010Response:+\342?(\n&com" +
-      ".databricks.rpc.RPC[$this.Response]\"\270\001\n\t" +
-      "LogMetric\022\016\n\006run_id\030\006 \001(\t\022\020\n\010run_uuid\030\001 " +
-      "\001(\t\022\021\n\003key\030\002 \001(\tB\004\370\206\031\001\022\023\n\005value\030\003 \001(\001B\004\370" +
-      "\206\031\001\022\027\n\ttimestamp\030\004 \001(\003B\004\370\206\031\001\022\017\n\004step\030\005 \001" +
-      "(\003:\0010\032\n\n\010Response:+\342?(\n&com.databricks.r" +
-      "pc.RPC[$this.Response]\"\215\001\n\010LogParam\022\016\n\006r" +
-      "un_id\030\004 \001(\t\022\020\n\010run_uuid\030\001 \001(\t\022\021\n\003key\030\002 \001" +
-      "(\tB\004\370\206\031\001\022\023\n\005value\030\003 \001(\tB\004\370\206\031\001\032\n\n\010Respons" +
-      "e:+\342?(\n&com.databricks.rpc.RPC[$this.Res" +
-      "ponse]\"\220\001\n\020SetExperimentTag\022\033\n\rexperimen" +
-      "t_id\030\001 \001(\tB\004\370\206\031\001\022\021\n\003key\030\002 \001(\tB\004\370\206\031\001\022\023\n\005v" +
-      "alue\030\003 \001(\tB\004\370\206\031\001\032\n\n\010Response:+\342?(\n&com.d" +
-      "atabricks.rpc.RPC[$this.Response]\"\213\001\n\006Se" +
-      "tTag\022\016\n\006run_id\030\004 \001(\t\022\020\n\010run_uuid\030\001 \001(\t\022\021" +
-      "\n\003key\030\002 \001(\tB\004\370\206\031\001\022\023\n\005value\030\003 \001(\tB\004\370\206\031\001\032\n" +
-      "\n\010Response:+\342?(\n&com.databricks.rpc.RPC[" +
-      "$this.Response]\"m\n\tDeleteTag\022\024\n\006run_id\030\001" +
-      " \001(\tB\004\370\206\031\001\022\021\n\003key\030\002 \001(\tB\004\370\206\031\001\032\n\n\010Respons" +
-      "e:+\342?(\n&com.databricks.rpc.RPC[$this.Res" +
-      "ponse]\"}\n\006GetRun\022\016\n\006run_id\030\002 \001(\t\022\020\n\010run_" +
-      "uuid\030\001 \001(\t\032$\n\010Response\022\030\n\003run\030\001 \001(\0132\013.ml" +
-      "flow.Run:+\342?(\n&com.databricks.rpc.RPC[$t" +
-      "his.Response]\"\230\002\n\nSearchRuns\022\026\n\016experime" +
-      "nt_ids\030\001 \003(\t\022\016\n\006filter\030\004 \001(\t\0224\n\rrun_view" +
-      "_type\030\003 \001(\0162\020.mlflow.ViewType:\013ACTIVE_ON" +
-      "LY\022\031\n\013max_results\030\005 \001(\005:\0041000\022\020\n\010order_b" +
-      "y\030\006 \003(\t\022\022\n\npage_token\030\007 \001(\t\032>\n\010Response\022" +
-      "\031\n\004runs\030\001 \003(\0132\013.mlflow.Run\022\027\n\017next_page_" +
-      "token\030\002 \001(\t:+\342?(\n&com.databricks.rpc.RPC" +
-      "[$this.Response]\"\330\001\n\rListArtifacts\022\016\n\006ru" +
-      "n_id\030\003 \001(\t\022\020\n\010run_uuid\030\001 \001(\t\022\014\n\004path\030\002 \001" +
-      "(\t\022\022\n\npage_token\030\004 \001(\t\032V\n\010Response\022\020\n\010ro" +
-      "ot_uri\030\001 \001(\t\022\037\n\005files\030\002 \003(\0132\020.mlflow.Fil" +
-      "eInfo\022\027\n\017next_page_token\030\003 \001(\t:+\342?(\n&com" +
-      ".databricks.rpc.RPC[$this.Response]\";\n\010F" +
-      "ileInfo\022\014\n\004path\030\001 \001(\t\022\016\n\006is_dir\030\002 \001(\010\022\021\n" +
-      "\tfile_size\030\003 \001(\003\"\250\001\n\020GetMetricHistory\022\016\n" +
-      "\006run_id\030\003 \001(\t\022\020\n\010run_uuid\030\001 \001(\t\022\030\n\nmetri" +
-      "c_key\030\002 \001(\tB\004\370\206\031\001\032+\n\010Response\022\037\n\007metrics" +
-      "\030\001 \003(\0132\016.mlflow.Metric:+\342?(\n&com.databri" +
-      "cks.rpc.RPC[$this.Response]\"\261\001\n\010LogBatch" +
-      "\022\016\n\006run_id\030\001 \001(\t\022\037\n\007metrics\030\002 \003(\0132\016.mlfl" +
-      "ow.Metric\022\035\n\006params\030\003 \003(\0132\r.mlflow.Param" +
-      "\022\034\n\004tags\030\004 \003(\0132\016.mlflow.RunTag\032\n\n\010Respon" +
-      "se:+\342?(\n&com.databricks.rpc.RPC[$this.Re" +
-      "sponse]\"g\n\010LogModel\022\016\n\006run_id\030\001 \001(\t\022\022\n\nm" +
-      "odel_json\030\002 \001(\t\032\n\n\010Response:+\342?(\n&com.da" +
-      "tabricks.rpc.RPC[$this.Response]\"\225\001\n\023Get" +
-      "ExperimentByName\022\035\n\017experiment_name\030\001 \001(" +
-      "\tB\004\370\206\031\001\0322\n\010Response\022&\n\nexperiment\030\001 \001(\0132" +
-      "\022.mlflow.Experiment:+\342?(\n&com.databricks" +
-      ".rpc.RPC[$this.Response]*6\n\010ViewType\022\017\n\013" +
-      "ACTIVE_ONLY\020\001\022\020\n\014DELETED_ONLY\020\002\022\007\n\003ALL\020\003" +
-      "*I\n\nSourceType\022\014\n\010NOTEBOOK\020\001\022\007\n\003JOB\020\002\022\013\n" +
-      "\007PROJECT\020\003\022\t\n\005LOCAL\020\004\022\014\n\007UNKNOWN\020\350\007*M\n\tR" +
-      "unStatus\022\013\n\007RUNNING\020\001\022\r\n\tSCHEDULED\020\002\022\014\n\010" +
-      "FINISHED\020\003\022\n\n\006FAILED\020\004\022\n\n\006KILLED\020\0052\341\036\n\rM" +
-      "lflowService\022\246\001\n\023getExperimentByName\022\033.m" +
-      "lflow.GetExperimentByName\032$.mlflow.GetEx" +
-      "perimentByName.Response\"L\362\206\031H\n,\n\003GET\022\037/m" +
-      "lflow/experiments/get-by-name\032\004\010\002\020\000\020\001*\026G" +
-      "et Experiment By Name\022\306\001\n\020createExperime" +
-      "nt\022\030.mlflow.CreateExperiment\032!.mlflow.Cr" +
-      "eateExperiment.Response\"u\362\206\031q\n(\n\004POST\022\032/" +
-      "mlflow/experiments/create\032\004\010\002\020\000\n0\n\004POST\022" +
-      "\"/preview/mlflow/experiments/create\032\004\010\002\020" +
-      "\000\020\001*\021Create Experiment\022\274\001\n\017listExperimen" +
-      "ts\022\027.mlflow.ListExperiments\032 .mlflow.Lis" +
-      "tExperiments.Response\"n\362\206\031j\n%\n\003GET\022\030/mlf" +
-      "low/experiments/list\032\004\010\002\020\000\n-\n\003GET\022 /prev" +
-      "iew/mlflow/experiments/list\032\004\010\002\020\000\020\001*\020Lis" +
-      "t Experiments\022\262\001\n\rgetExperiment\022\025.mlflow" +
-      ".GetExperiment\032\036.mlflow.GetExperiment.Re" +
-      "sponse\"j\362\206\031f\n$\n\003GET\022\027/mlflow/experiments" +
-      "/get\032\004\010\002\020\000\n,\n\003GET\022\037/preview/mlflow/exper" +
-      "iments/get\032\004\010\002\020\000\020\001*\016Get Experiment\022\306\001\n\020d" +
-      "eleteExperiment\022\030.mlflow.DeleteExperimen" +
-      "t\032!.mlflow.DeleteExperiment.Response\"u\362\206" +
-      "\031q\n(\n\004POST\022\032/mlflow/experiments/delete\032\004" +
-      "\010\002\020\000\n0\n\004POST\022\"/preview/mlflow/experiment" +
-      "s/delete\032\004\010\002\020\000\020\001*\021Delete Experiment\022\314\001\n\021" +
-      "restoreExperiment\022\031.mlflow.RestoreExperi" +
-      "ment\032\".mlflow.RestoreExperiment.Response" +
-      "\"x\362\206\031t\n)\n\004POST\022\033/mlflow/experiments/rest" +
-      "ore\032\004\010\002\020\000\n1\n\004POST\022#/preview/mlflow/exper" +
-      "iments/restore\032\004\010\002\020\000\020\001*\022Restore Experime" +
-      "nt\022\306\001\n\020updateExperiment\022\030.mlflow.UpdateE" +
-      "xperiment\032!.mlflow.UpdateExperiment.Resp" +
-      "onse\"u\362\206\031q\n(\n\004POST\022\032/mlflow/experiments/" +
-      "update\032\004\010\002\020\000\n0\n\004POST\022\"/preview/mlflow/ex" +
-      "periments/update\032\004\010\002\020\000\020\001*\021Update Experim" +
-      "ent\022\234\001\n\tcreateRun\022\021.mlflow.CreateRun\032\032.m" +
-      "lflow.CreateRun.Response\"`\362\206\031\\\n!\n\004POST\022\023" +
-      "/mlflow/runs/create\032\004\010\002\020\000\n)\n\004POST\022\033/prev" +
-      "iew/mlflow/runs/create\032\004\010\002\020\000\020\001*\nCreate R" +
-      "un\022\234\001\n\tupdateRun\022\021.mlflow.UpdateRun\032\032.ml" +
-      "flow.UpdateRun.Response\"`\362\206\031\\\n!\n\004POST\022\023/" +
-      "mlflow/runs/update\032\004\010\002\020\000\n)\n\004POST\022\033/previ" +
-      "ew/mlflow/runs/update\032\004\010\002\020\000\020\001*\nUpdate Ru" +
-      "n\022\234\001\n\tdeleteRun\022\021.mlflow.DeleteRun\032\032.mlf" +
-      "low.DeleteRun.Response\"`\362\206\031\\\n!\n\004POST\022\023/m" +
-      "lflow/runs/delete\032\004\010\002\020\000\n)\n\004POST\022\033/previe" +
-      "w/mlflow/runs/delete\032\004\010\002\020\000\020\001*\nDelete Run" +
-      "\022\242\001\n\nrestoreRun\022\022.mlflow.RestoreRun\032\033.ml" +
-      "flow.RestoreRun.Response\"c\362\206\031_\n\"\n\004POST\022\024" +
-      "/mlflow/runs/restore\032\004\010\002\020\000\n*\n\004POST\022\034/pre" +
-      "view/mlflow/runs/restore\032\004\010\002\020\000\020\001*\013Restor" +
-      "e Run\022\244\001\n\tlogMetric\022\021.mlflow.LogMetric\032\032" +
-      ".mlflow.LogMetric.Response\"h\362\206\031d\n%\n\004POST" +
-      "\022\027/mlflow/runs/log-metric\032\004\010\002\020\000\n-\n\004POST\022" +
-      "\037/preview/mlflow/runs/log-metric\032\004\010\002\020\000\020\001" +
-      "*\nLog Metric\022\246\001\n\010logParam\022\020.mlflow.LogPa" +
-      "ram\032\031.mlflow.LogParam.Response\"m\362\206\031i\n(\n\004" +
-      "POST\022\032/mlflow/runs/log-parameter\032\004\010\002\020\000\n0" +
-      "\n\004POST\022\"/preview/mlflow/runs/log-paramet" +
-      "er\032\004\010\002\020\000\020\001*\tLog Param\022\341\001\n\020setExperimentT" +
-      "ag\022\030.mlflow.SetExperimentTag\032!.mlflow.Se" +
-      "tExperimentTag.Response\"\217\001\362\206\031\212\001\n4\n\004POST\022" +
-      "&/mlflow/experiments/set-experiment-tag\032" +
-      "\004\010\002\020\000\n<\n\004POST\022./preview/mlflow/experimen" +
-      "ts/set-experiment-tag\032\004\010\002\020\000\020\001*\022Set Exper" +
-      "iment Tag\022\222\001\n\006setTag\022\016.mlflow.SetTag\032\027.m" +
-      "lflow.SetTag.Response\"_\362\206\031[\n\"\n\004POST\022\024/ml" +
-      "flow/runs/set-tag\032\004\010\002\020\000\n*\n\004POST\022\034/previe" +
-      "w/mlflow/runs/set-tag\032\004\010\002\020\000\020\001*\007Set Tag\022\244" +
-      "\001\n\tdeleteTag\022\021.mlflow.DeleteTag\032\032.mlflow" +
-      ".DeleteTag.Response\"h\362\206\031d\n%\n\004POST\022\027/mlfl" +
-      "ow/runs/delete-tag\032\004\010\002\020\000\n-\n\004POST\022\037/previ" +
-      "ew/mlflow/runs/delete-tag\032\004\010\002\020\000\020\001*\nDelet" +
-      "e Tag\022\210\001\n\006getRun\022\016.mlflow.GetRun\032\027.mlflo" +
-      "w.GetRun.Response\"U\362\206\031Q\n\035\n\003GET\022\020/mlflow/" +
-      "runs/get\032\004\010\002\020\000\n%\n\003GET\022\030/preview/mlflow/r" +
-      "uns/get\032\004\010\002\020\000\020\001*\007Get Run\022\314\001\n\nsearchRuns\022" +
-      "\022.mlflow.SearchRuns\032\033.mlflow.SearchRuns." +
-      "Response\"\214\001\362\206\031\207\001\n!\n\004POST\022\023/mlflow/runs/s" +
-      "earch\032\004\010\002\020\000\n)\n\004POST\022\033/preview/mlflow/run" +
-      "s/search\032\004\010\002\020\000\n(\n\003GET\022\033/preview/mlflow/r" +
-      "uns/search\032\004\010\002\020\000\020\001*\013Search Runs\022\260\001\n\rlist" +
-      "Artifacts\022\025.mlflow.ListArtifacts\032\036.mlflo" +
-      "w.ListArtifacts.Response\"h\362\206\031d\n#\n\003GET\022\026/" +
-      "mlflow/artifacts/list\032\004\010\002\020\000\n+\n\003GET\022\036/pre" +
-      "view/mlflow/artifacts/list\032\004\010\002\020\000\020\001*\016List" +
-      " Artifacts\022\307\001\n\020getMetricHistory\022\030.mlflow" +
-      ".GetMetricHistory\032!.mlflow.GetMetricHist" +
-      "ory.Response\"v\362\206\031r\n(\n\003GET\022\033/mlflow/metri" +
-      "cs/get-history\032\004\010\002\020\000\n0\n\003GET\022#/preview/ml" +
-      "flow/metrics/get-history\032\004\010\002\020\000\020\001*\022Get Me" +
-      "tric History\022\236\001\n\010logBatch\022\020.mlflow.LogBa" +
-      "tch\032\031.mlflow.LogBatch.Response\"e\362\206\031a\n$\n\004" +
-      "POST\022\026/mlflow/runs/log-batch\032\004\010\002\020\000\n,\n\004PO" +
-      "ST\022\036/preview/mlflow/runs/log-batch\032\004\010\002\020\000" +
-      "\020\001*\tLog Batch\022\236\001\n\010logModel\022\020.mlflow.LogM" +
-      "odel\032\031.mlflow.LogModel.Response\"e\362\206\031a\n$\n" +
-      "\004POST\022\026/mlflow/runs/log-model\032\004\010\002\020\000\n,\n\004P" +
-      "OST\022\036/preview/mlflow/runs/log-model\032\004\010\002\020" +
-      "\000\020\001*\tLog ModelB\036\n\024org.mlflow.api.proto\220\001" +
-      "\001\342?\002\020\001"
+      "Data\"\271\001\n\007RunData\022\037\n\007metrics\030\001 \003(\0132\016.mlfl" +
+      "ow.Metric\022\035\n\006params\030\002 \003(\0132\r.mlflow.Param" +
+      "\022\034\n\004tags\030\003 \003(\0132\016.mlflow.RunTag\022\'\n\017metric" +
+      "_minimums\030\004 \003(\0132\016.mlflow.Metric\022\'\n\017metri" +
+      "c_maximums\030\005 \003(\0132\016.mlflow.Metric\"$\n\006RunT" +
+      "ag\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t\"+\n\rExperi" +
+      "mentTag\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t\"\313\001\n\007" +
+      "RunInfo\022\016\n\006run_id\030\017 \001(\t\022\020\n\010run_uuid\030\001 \001(" +
+      "\t\022\025\n\rexperiment_id\030\002 \001(\t\022\017\n\007user_id\030\006 \001(" +
+      "\t\022!\n\006status\030\007 \001(\0162\021.mlflow.RunStatus\022\022\n\n" +
+      "start_time\030\010 \001(\003\022\020\n\010end_time\030\t \001(\003\022\024\n\014ar" +
+      "tifact_uri\030\r \001(\t\022\027\n\017lifecycle_stage\030\016 \001(" +
+      "\t\"\273\001\n\nExperiment\022\025\n\rexperiment_id\030\001 \001(\t\022" +
+      "\014\n\004name\030\002 \001(\t\022\031\n\021artifact_location\030\003 \001(\t" +
+      "\022\027\n\017lifecycle_stage\030\004 \001(\t\022\030\n\020last_update" +
+      "_time\030\005 \001(\003\022\025\n\rcreation_time\030\006 \001(\003\022#\n\004ta" +
+      "gs\030\007 \003(\0132\025.mlflow.ExperimentTag\"\266\001\n\020Crea" +
+      "teExperiment\022\022\n\004name\030\001 \001(\tB\004\370\206\031\001\022\031\n\021arti" +
+      "fact_location\030\002 \001(\t\022#\n\004tags\030\003 \003(\0132\025.mlfl" +
+      "ow.ExperimentTag\032!\n\010Response\022\025\n\rexperime" +
+      "nt_id\030\001 \001(\t:+\342?(\n&com.databricks.rpc.RPC" +
+      "[$this.Response]\"\332\001\n\017ListExperiments\022#\n\t" +
+      "view_type\030\001 \001(\0162\020.mlflow.ViewType\022\023\n\013max" +
+      "_results\030\002 \001(\003\022\022\n\npage_token\030\003 \001(\t\032L\n\010Re" +
+      "sponse\022\'\n\013experiments\030\001 \003(\0132\022.mlflow.Exp" +
+      "eriment\022\027\n\017next_page_token\030\002 \001(\t:+\342?(\n&c" +
+      "om.databricks.rpc.RPC[$this.Response]\"\260\001" +
+      "\n\rGetExperiment\022\033\n\rexperiment_id\030\001 \001(\tB\004" +
+      "\370\206\031\001\032U\n\010Response\022&\n\nexperiment\030\001 \001(\0132\022.m" +
+      "lflow.Experiment\022!\n\004runs\030\002 \003(\0132\017.mlflow." +
+      "RunInfoB\002\030\001:+\342?(\n&com.databricks.rpc.RPC" +
+      "[$this.Response]\"h\n\020DeleteExperiment\022\033\n\r" +
+      "experiment_id\030\001 \001(\tB\004\370\206\031\001\032\n\n\010Response:+\342" +
+      "?(\n&com.databricks.rpc.RPC[$this.Respons" +
+      "e]\"i\n\021RestoreExperiment\022\033\n\rexperiment_id" +
+      "\030\001 \001(\tB\004\370\206\031\001\032\n\n\010Response:+\342?(\n&com.datab" +
+      "ricks.rpc.RPC[$this.Response]\"z\n\020UpdateE" +
+      "xperiment\022\033\n\rexperiment_id\030\001 \001(\tB\004\370\206\031\001\022\020" +
+      "\n\010new_name\030\002 \001(\t\032\n\n\010Response:+\342?(\n&com.d" +
+      "atabricks.rpc.RPC[$this.Response]\"\270\001\n\tCr" +
+      "eateRun\022\025\n\rexperiment_id\030\001 \001(\t\022\017\n\007user_i" +
+      "d\030\002 \001(\t\022\022\n\nstart_time\030\007 \001(\003\022\034\n\004tags\030\t \003(" +
+      "\0132\016.mlflow.RunTag\032$\n\010Response\022\030\n\003run\030\001 \001" +
+      "(\0132\013.mlflow.Run:+\342?(\n&com.databricks.rpc" +
+      ".RPC[$this.Response]\"\276\001\n\tUpdateRun\022\016\n\006ru" +
+      "n_id\030\004 \001(\t\022\020\n\010run_uuid\030\001 \001(\t\022!\n\006status\030\002" +
+      " \001(\0162\021.mlflow.RunStatus\022\020\n\010end_time\030\003 \001(" +
+      "\003\032-\n\010Response\022!\n\010run_info\030\001 \001(\0132\017.mlflow" +
+      ".RunInfo:+\342?(\n&com.databricks.rpc.RPC[$t" +
+      "his.Response]\"Z\n\tDeleteRun\022\024\n\006run_id\030\001 \001" +
+      "(\tB\004\370\206\031\001\032\n\n\010Response:+\342?(\n&com.databrick" +
+      "s.rpc.RPC[$this.Response]\"[\n\nRestoreRun\022" +
+      "\024\n\006run_id\030\001 \001(\tB\004\370\206\031\001\032\n\n\010Response:+\342?(\n&" +
+      "com.databricks.rpc.RPC[$this.Response]\"\270" +
+      "\001\n\tLogMetric\022\016\n\006run_id\030\006 \001(\t\022\020\n\010run_uuid" +
+      "\030\001 \001(\t\022\021\n\003key\030\002 \001(\tB\004\370\206\031\001\022\023\n\005value\030\003 \001(\001" +
+      "B\004\370\206\031\001\022\027\n\ttimestamp\030\004 \001(\003B\004\370\206\031\001\022\017\n\004step\030" +
+      "\005 \001(\003:\0010\032\n\n\010Response:+\342?(\n&com.databrick" +
+      "s.rpc.RPC[$this.Response]\"\215\001\n\010LogParam\022\016" +
+      "\n\006run_id\030\004 \001(\t\022\020\n\010run_uuid\030\001 \001(\t\022\021\n\003key\030" +
+      "\002 \001(\tB\004\370\206\031\001\022\023\n\005value\030\003 \001(\tB\004\370\206\031\001\032\n\n\010Resp" +
+      "onse:+\342?(\n&com.databricks.rpc.RPC[$this." +
+      "Response]\"\220\001\n\020SetExperimentTag\022\033\n\rexperi" +
+      "ment_id\030\001 \001(\tB\004\370\206\031\001\022\021\n\003key\030\002 \001(\tB\004\370\206\031\001\022\023" +
+      "\n\005value\030\003 \001(\tB\004\370\206\031\001\032\n\n\010Response:+\342?(\n&co" +
+      "m.databricks.rpc.RPC[$this.Response]\"\213\001\n" +
+      "\006SetTag\022\016\n\006run_id\030\004 \001(\t\022\020\n\010run_uuid\030\001 \001(" +
+      "\t\022\021\n\003key\030\002 \001(\tB\004\370\206\031\001\022\023\n\005value\030\003 \001(\tB\004\370\206\031" +
+      "\001\032\n\n\010Response:+\342?(\n&com.databricks.rpc.R" +
+      "PC[$this.Response]\"m\n\tDeleteTag\022\024\n\006run_i" +
+      "d\030\001 \001(\tB\004\370\206\031\001\022\021\n\003key\030\002 \001(\tB\004\370\206\031\001\032\n\n\010Resp" +
+      "onse:+\342?(\n&com.databricks.rpc.RPC[$this." +
+      "Response]\"}\n\006GetRun\022\016\n\006run_id\030\002 \001(\t\022\020\n\010r" +
+      "un_uuid\030\001 \001(\t\032$\n\010Response\022\030\n\003run\030\001 \001(\0132\013" +
+      ".mlflow.Run:+\342?(\n&com.databricks.rpc.RPC" +
+      "[$this.Response]\"\230\002\n\nSearchRuns\022\026\n\016exper" +
+      "iment_ids\030\001 \003(\t\022\016\n\006filter\030\004 \001(\t\0224\n\rrun_v" +
+      "iew_type\030\003 \001(\0162\020.mlflow.ViewType:\013ACTIVE" +
+      "_ONLY\022\031\n\013max_results\030\005 \001(\005:\0041000\022\020\n\010orde" +
+      "r_by\030\006 \003(\t\022\022\n\npage_token\030\007 \001(\t\032>\n\010Respon" +
+      "se\022\031\n\004runs\030\001 \003(\0132\013.mlflow.Run\022\027\n\017next_pa" +
+      "ge_token\030\002 \001(\t:+\342?(\n&com.databricks.rpc." +
+      "RPC[$this.Response]\"\330\001\n\rListArtifacts\022\016\n" +
+      "\006run_id\030\003 \001(\t\022\020\n\010run_uuid\030\001 \001(\t\022\014\n\004path\030" +
+      "\002 \001(\t\022\022\n\npage_token\030\004 \001(\t\032V\n\010Response\022\020\n" +
+      "\010root_uri\030\001 \001(\t\022\037\n\005files\030\002 \003(\0132\020.mlflow." +
+      "FileInfo\022\027\n\017next_page_token\030\003 \001(\t:+\342?(\n&" +
+      "com.databricks.rpc.RPC[$this.Response]\";" +
+      "\n\010FileInfo\022\014\n\004path\030\001 \001(\t\022\016\n\006is_dir\030\002 \001(\010" +
+      "\022\021\n\tfile_size\030\003 \001(\003\"\250\001\n\020GetMetricHistory" +
+      "\022\016\n\006run_id\030\003 \001(\t\022\020\n\010run_uuid\030\001 \001(\t\022\030\n\nme" +
+      "tric_key\030\002 \001(\tB\004\370\206\031\001\032+\n\010Response\022\037\n\007metr" +
+      "ics\030\001 \003(\0132\016.mlflow.Metric:+\342?(\n&com.data" +
+      "bricks.rpc.RPC[$this.Response]\"\261\001\n\010LogBa" +
+      "tch\022\016\n\006run_id\030\001 \001(\t\022\037\n\007metrics\030\002 \003(\0132\016.m" +
+      "lflow.Metric\022\035\n\006params\030\003 \003(\0132\r.mlflow.Pa" +
+      "ram\022\034\n\004tags\030\004 \003(\0132\016.mlflow.RunTag\032\n\n\010Res" +
+      "ponse:+\342?(\n&com.databricks.rpc.RPC[$this" +
+      ".Response]\"g\n\010LogModel\022\016\n\006run_id\030\001 \001(\t\022\022" +
+      "\n\nmodel_json\030\002 \001(\t\032\n\n\010Response:+\342?(\n&com" +
+      ".databricks.rpc.RPC[$this.Response]\"\225\001\n\023" +
+      "GetExperimentByName\022\035\n\017experiment_name\030\001" +
+      " \001(\tB\004\370\206\031\001\0322\n\010Response\022&\n\nexperiment\030\001 \001" +
+      "(\0132\022.mlflow.Experiment:+\342?(\n&com.databri" +
+      "cks.rpc.RPC[$this.Response]*6\n\010ViewType\022" +
+      "\017\n\013ACTIVE_ONLY\020\001\022\020\n\014DELETED_ONLY\020\002\022\007\n\003AL" +
+      "L\020\003*I\n\nSourceType\022\014\n\010NOTEBOOK\020\001\022\007\n\003JOB\020\002" +
+      "\022\013\n\007PROJECT\020\003\022\t\n\005LOCAL\020\004\022\014\n\007UNKNOWN\020\350\007*M" +
+      "\n\tRunStatus\022\013\n\007RUNNING\020\001\022\r\n\tSCHEDULED\020\002\022" +
+      "\014\n\010FINISHED\020\003\022\n\n\006FAILED\020\004\022\n\n\006KILLED\020\0052\341\036" +
+      "\n\rMlflowService\022\246\001\n\023getExperimentByName\022" +
+      "\033.mlflow.GetExperimentByName\032$.mlflow.Ge" +
+      "tExperimentByName.Response\"L\362\206\031H\n,\n\003GET\022" +
+      "\037/mlflow/experiments/get-by-name\032\004\010\002\020\000\020\001" +
+      "*\026Get Experiment By Name\022\306\001\n\020createExper" +
+      "iment\022\030.mlflow.CreateExperiment\032!.mlflow" +
+      ".CreateExperiment.Response\"u\362\206\031q\n(\n\004POST" +
+      "\022\032/mlflow/experiments/create\032\004\010\002\020\000\n0\n\004PO" +
+      "ST\022\"/preview/mlflow/experiments/create\032\004" +
+      "\010\002\020\000\020\001*\021Create Experiment\022\274\001\n\017listExperi" +
+      "ments\022\027.mlflow.ListExperiments\032 .mlflow." +
+      "ListExperiments.Response\"n\362\206\031j\n%\n\003GET\022\030/" +
+      "mlflow/experiments/list\032\004\010\002\020\000\n-\n\003GET\022 /p" +
+      "review/mlflow/experiments/list\032\004\010\002\020\000\020\001*\020" +
+      "List Experiments\022\262\001\n\rgetExperiment\022\025.mlf" +
+      "low.GetExperiment\032\036.mlflow.GetExperiment" +
+      ".Response\"j\362\206\031f\n$\n\003GET\022\027/mlflow/experime" +
+      "nts/get\032\004\010\002\020\000\n,\n\003GET\022\037/preview/mlflow/ex" +
+      "periments/get\032\004\010\002\020\000\020\001*\016Get Experiment\022\306\001" +
+      "\n\020deleteExperiment\022\030.mlflow.DeleteExperi" +
+      "ment\032!.mlflow.DeleteExperiment.Response\"" +
+      "u\362\206\031q\n(\n\004POST\022\032/mlflow/experiments/delet" +
+      "e\032\004\010\002\020\000\n0\n\004POST\022\"/preview/mlflow/experim" +
+      "ents/delete\032\004\010\002\020\000\020\001*\021Delete Experiment\022\314" +
+      "\001\n\021restoreExperiment\022\031.mlflow.RestoreExp" +
+      "eriment\032\".mlflow.RestoreExperiment.Respo" +
+      "nse\"x\362\206\031t\n)\n\004POST\022\033/mlflow/experiments/r" +
+      "estore\032\004\010\002\020\000\n1\n\004POST\022#/preview/mlflow/ex" +
+      "periments/restore\032\004\010\002\020\000\020\001*\022Restore Exper" +
+      "iment\022\306\001\n\020updateExperiment\022\030.mlflow.Upda" +
+      "teExperiment\032!.mlflow.UpdateExperiment.R" +
+      "esponse\"u\362\206\031q\n(\n\004POST\022\032/mlflow/experimen" +
+      "ts/update\032\004\010\002\020\000\n0\n\004POST\022\"/preview/mlflow" +
+      "/experiments/update\032\004\010\002\020\000\020\001*\021Update Expe" +
+      "riment\022\234\001\n\tcreateRun\022\021.mlflow.CreateRun\032" +
+      "\032.mlflow.CreateRun.Response\"`\362\206\031\\\n!\n\004POS" +
+      "T\022\023/mlflow/runs/create\032\004\010\002\020\000\n)\n\004POST\022\033/p" +
+      "review/mlflow/runs/create\032\004\010\002\020\000\020\001*\nCreat" +
+      "e Run\022\234\001\n\tupdateRun\022\021.mlflow.UpdateRun\032\032" +
+      ".mlflow.UpdateRun.Response\"`\362\206\031\\\n!\n\004POST" +
+      "\022\023/mlflow/runs/update\032\004\010\002\020\000\n)\n\004POST\022\033/pr" +
+      "eview/mlflow/runs/update\032\004\010\002\020\000\020\001*\nUpdate" +
+      " Run\022\234\001\n\tdeleteRun\022\021.mlflow.DeleteRun\032\032." +
+      "mlflow.DeleteRun.Response\"`\362\206\031\\\n!\n\004POST\022" +
+      "\023/mlflow/runs/delete\032\004\010\002\020\000\n)\n\004POST\022\033/pre" +
+      "view/mlflow/runs/delete\032\004\010\002\020\000\020\001*\nDelete " +
+      "Run\022\242\001\n\nrestoreRun\022\022.mlflow.RestoreRun\032\033" +
+      ".mlflow.RestoreRun.Response\"c\362\206\031_\n\"\n\004POS" +
+      "T\022\024/mlflow/runs/restore\032\004\010\002\020\000\n*\n\004POST\022\034/" +
+      "preview/mlflow/runs/restore\032\004\010\002\020\000\020\001*\013Res" +
+      "tore Run\022\244\001\n\tlogMetric\022\021.mlflow.LogMetri" +
+      "c\032\032.mlflow.LogMetric.Response\"h\362\206\031d\n%\n\004P" +
+      "OST\022\027/mlflow/runs/log-metric\032\004\010\002\020\000\n-\n\004PO" +
+      "ST\022\037/preview/mlflow/runs/log-metric\032\004\010\002\020" +
+      "\000\020\001*\nLog Metric\022\246\001\n\010logParam\022\020.mlflow.Lo" +
+      "gParam\032\031.mlflow.LogParam.Response\"m\362\206\031i\n" +
+      "(\n\004POST\022\032/mlflow/runs/log-parameter\032\004\010\002\020" +
+      "\000\n0\n\004POST\022\"/preview/mlflow/runs/log-para" +
+      "meter\032\004\010\002\020\000\020\001*\tLog Param\022\341\001\n\020setExperime" +
+      "ntTag\022\030.mlflow.SetExperimentTag\032!.mlflow" +
+      ".SetExperimentTag.Response\"\217\001\362\206\031\212\001\n4\n\004PO" +
+      "ST\022&/mlflow/experiments/set-experiment-t" +
+      "ag\032\004\010\002\020\000\n<\n\004POST\022./preview/mlflow/experi" +
+      "ments/set-experiment-tag\032\004\010\002\020\000\020\001*\022Set Ex" +
+      "periment Tag\022\222\001\n\006setTag\022\016.mlflow.SetTag\032" +
+      "\027.mlflow.SetTag.Response\"_\362\206\031[\n\"\n\004POST\022\024" +
+      "/mlflow/runs/set-tag\032\004\010\002\020\000\n*\n\004POST\022\034/pre" +
+      "view/mlflow/runs/set-tag\032\004\010\002\020\000\020\001*\007Set Ta" +
+      "g\022\244\001\n\tdeleteTag\022\021.mlflow.DeleteTag\032\032.mlf" +
+      "low.DeleteTag.Response\"h\362\206\031d\n%\n\004POST\022\027/m" +
+      "lflow/runs/delete-tag\032\004\010\002\020\000\n-\n\004POST\022\037/pr" +
+      "eview/mlflow/runs/delete-tag\032\004\010\002\020\000\020\001*\nDe" +
+      "lete Tag\022\210\001\n\006getRun\022\016.mlflow.GetRun\032\027.ml" +
+      "flow.GetRun.Response\"U\362\206\031Q\n\035\n\003GET\022\020/mlfl" +
+      "ow/runs/get\032\004\010\002\020\000\n%\n\003GET\022\030/preview/mlflo" +
+      "w/runs/get\032\004\010\002\020\000\020\001*\007Get Run\022\314\001\n\nsearchRu" +
+      "ns\022\022.mlflow.SearchRuns\032\033.mlflow.SearchRu" +
+      "ns.Response\"\214\001\362\206\031\207\001\n!\n\004POST\022\023/mlflow/run" +
+      "s/search\032\004\010\002\020\000\n)\n\004POST\022\033/preview/mlflow/" +
+      "runs/search\032\004\010\002\020\000\n(\n\003GET\022\033/preview/mlflo" +
+      "w/runs/search\032\004\010\002\020\000\020\001*\013Search Runs\022\260\001\n\rl" +
+      "istArtifacts\022\025.mlflow.ListArtifacts\032\036.ml" +
+      "flow.ListArtifacts.Response\"h\362\206\031d\n#\n\003GET" +
+      "\022\026/mlflow/artifacts/list\032\004\010\002\020\000\n+\n\003GET\022\036/" +
+      "preview/mlflow/artifacts/list\032\004\010\002\020\000\020\001*\016L" +
+      "ist Artifacts\022\307\001\n\020getMetricHistory\022\030.mlf" +
+      "low.GetMetricHistory\032!.mlflow.GetMetricH" +
+      "istory.Response\"v\362\206\031r\n(\n\003GET\022\033/mlflow/me" +
+      "trics/get-history\032\004\010\002\020\000\n0\n\003GET\022#/preview" +
+      "/mlflow/metrics/get-history\032\004\010\002\020\000\020\001*\022Get" +
+      " Metric History\022\236\001\n\010logBatch\022\020.mlflow.Lo" +
+      "gBatch\032\031.mlflow.LogBatch.Response\"e\362\206\031a\n" +
+      "$\n\004POST\022\026/mlflow/runs/log-batch\032\004\010\002\020\000\n,\n" +
+      "\004POST\022\036/preview/mlflow/runs/log-batch\032\004\010" +
+      "\002\020\000\020\001*\tLog Batch\022\236\001\n\010logModel\022\020.mlflow.L" +
+      "ogModel\032\031.mlflow.LogModel.Response\"e\362\206\031a" +
+      "\n$\n\004POST\022\026/mlflow/runs/log-model\032\004\010\002\020\000\n," +
+      "\n\004POST\022\036/preview/mlflow/runs/log-model\032\004" +
+      "\010\002\020\000\020\001*\tLog ModelB\036\n\024org.mlflow.api.prot" +
+      "o\220\001\001\342?\002\020\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -49723,7 +50683,7 @@ public final class Service {
     internal_static_mlflow_RunData_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_mlflow_RunData_descriptor,
-        new java.lang.String[] { "Metrics", "Params", "Tags", });
+        new java.lang.String[] { "Metrics", "Params", "Tags", "MetricMinimums", "MetricMaximums", });
     internal_static_mlflow_RunTag_descriptor =
       getDescriptor().getMessageTypes().get(4);
     internal_static_mlflow_RunTag_fieldAccessorTable = new
