@@ -249,6 +249,46 @@ describe('RunView', () => {
     });
   });
 
+  test('Does not requests metric history for run metrics with min/max available', () => {
+    const store = mockStore({
+      ...minimalStoreRaw,
+      entities: {
+        ...minimalStoreRaw.entities,
+        latestMetricsByRunUuid: {
+          'uuid-1234-5678-9012': {
+            m1: Metric.fromJs({ key: 'm1', value: 1 }),
+            m2: Metric.fromJs({ key: 'm2', value: 2 }),
+          },
+        },
+        minMetricsByRunUuid: {
+          'uuid-1234-5678-9012': {
+            m1: Metric.fromJs({ key: 'm1', value: 1 }),
+            m2: Metric.fromJs({ key: 'm2', value: 2 }),
+          },
+        },
+        maxMetricsByRunUuid: {
+          'uuid-1234-5678-9012': {
+            m1: Metric.fromJs({ key: 'm1', value: 3 }),
+            m2: Metric.fromJs({ key: 'm2', value: 4 }),
+          },
+        },
+      },
+    });
+
+    mountWithIntl(
+      <Provider store={store}>
+        <BrowserRouter>
+          <RunView {...minimalProps} />
+        </BrowserRouter>
+      </Provider>,
+    );
+
+    const actions = store.getActions();
+    expect(
+      actions.find((action) => action.type === pending(GET_METRIC_HISTORY_API)),
+    ).toBeUndefined();
+  });
+
   test('Displays latest, min and max metrics', () => {
     const store = mockStore({
       ...minimalStoreRaw,

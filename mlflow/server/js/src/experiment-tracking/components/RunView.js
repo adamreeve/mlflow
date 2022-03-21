@@ -59,7 +59,9 @@ export class RunViewImpl extends Component {
     // Because the RunView is wrapped in a RequestStateWrapper, it won't be
     // mounted until after latestMetrics data is available.
     Object.values(this.props.latestMetrics).forEach((metric) => {
-      this.props.getMetricHistoryApi(this.props.runUuid, metric.key);
+      if ((this.props.minMetrics && this.props.minMetrics[metric.key]) === undefined) {
+        this.props.getMetricHistoryApi(this.props.runUuid, metric.key);
+      }
     });
   }
 

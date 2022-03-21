@@ -31,15 +31,16 @@ export const getMaxMetrics = (runUuid, state) => {
   return state.entities.maxMetricsByRunUuid[runUuid];
 };
 
+const metricArrToObject = (metrics) => {
+  const metricObj = {};
+  metrics.forEach((m) => (metricObj[m.key] = Metric.fromJs(m)));
+  return metricObj;
+};
+
 /**
  * Return latest metrics by run UUID (object of run UUID -> object of metric key -> Metric object)
  */
 export const latestMetricsByRunUuid = (state = {}, action) => {
-  const metricArrToObject = (metrics) => {
-    const metricObj = {};
-    metrics.forEach((m) => (metricObj[m.key] = Metric.fromJs(m)));
-    return metricObj;
-  };
   switch (action.type) {
     case fulfilled(GET_RUN_API): {
       const runInfo = RunInfo.fromJs(action.payload.run.info);
@@ -81,21 +82,41 @@ export const latestMetricsByRunUuid = (state = {}, action) => {
   }
 };
 
-const reducedMetricsByRunUuid = (state = {}, action, reducer) => {
+const reducedMetricsByRunUuid = (state, action, reducer) => {
+  const newState = { ...state };
+  const { runUuid, key } = action.meta;
+  const { metrics } = action.payload;
+  if (metrics && metrics.length > 0) {
+    const reducedMetric = Metric.fromJs(reducer(metrics));
+    if (newState[runUuid]) {
+      newState[runUuid][key] = reducedMetric;
+    } else {
+      newState[runUuid] = { [key]: reducedMetric };
+    }
+  }
+  return newState;
+};
+
+/**
+ * Return minimum metrics by run UUID (object of run UUID -> object of metric key -> Metric object)
+ */
+export const minMetricsByRunUuid = (state = {}, action) => {
   switch (action.type) {
     case fulfilled(GET_METRIC_HISTORY_API): {
-      const newState = { ...state };
-      const { runUuid, key } = action.meta;
-      const { metrics } = action.payload;
-      if (metrics && metrics.length > 0) {
-        const reducedMetric = Metric.fromJs(reducer(metrics));
-        if (newState[runUuid]) {
-          newState[runUuid][key] = reducedMetric;
-        } else {
-          newState[runUuid] = { [key]: reducedMetric };
-        }
+      return reducedMetricsByRunUuid(state, action, (metrics) => _.minBy(metrics, 'value'));
+    }
+    case fulfilled(GET_RUN_API): {
+      const runInfo = RunInfo.fromJs(action.payload.run.info);
+      const runUuid = runInfo.getRunUuid();
+      const metricMinimums = action.payload.run.data.metric_minimums || [];
+      if (metricMinimums.length > 0) {
+        return {
+          ...state,
+          [runUuid]: metricArrToObject(metricMinimums),
+        };
+      } else {
+        return state;
       }
-      return newState;
     }
     default:
       return state;
@@ -103,16 +124,30 @@ const reducedMetricsByRunUuid = (state = {}, action, reducer) => {
 };
 
 /**
- * Return minimum metrics by run UUID (object of run UUID -> object of metric key -> Metric object)
- */
-export const minMetricsByRunUuid = (state = {}, action) =>
-  reducedMetricsByRunUuid(state, action, (metrics) => _.minBy(metrics, 'value'));
-
-/**
  * Return maximum metrics by run UUID (object of run UUID -> object of metric key -> Metric object)
  */
-export const maxMetricsByRunUuid = (state = {}, action) =>
-  reducedMetricsByRunUuid(state, action, (metrics) => _.maxBy(metrics, 'value'));
+export const maxMetricsByRunUuid = (state = {}, action) => {
+  switch (action.type) {
+    case fulfilled(GET_METRIC_HISTORY_API): {
+      return reducedMetricsByRunUuid(state, action, (metrics) => _.maxBy(metrics, 'value'));
+    }
+    case fulfilled(GET_RUN_API): {
+      const runInfo = RunInfo.fromJs(action.payload.run.info);
+      const runUuid = runInfo.getRunUuid();
+      const metricMaximums = action.payload.run.data.metric_maximums || [];
+      if (metricMaximums.length > 0) {
+        return {
+          ...state,
+          [runUuid]: metricArrToObject(metricMaximums),
+        };
+      } else {
+        return state;
+      }
+    }
+    default:
+      return state;
+  }
+};
 
 export const metricsByRunUuid = (state = {}, action) => {
   switch (action.type) {

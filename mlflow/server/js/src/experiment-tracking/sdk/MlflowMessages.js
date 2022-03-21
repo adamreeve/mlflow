@@ -194,6 +194,12 @@ export const RunData = Immutable.Record({
 
   // repeated RunTag
   tags: Immutable.List(),
+
+  // repeated Metric
+  metric_minimums: Immutable.List(),
+
+  // repeated Metric
+  metric_maximums: Immutable.List(),
 }, 'RunData');
 
 /**
@@ -217,6 +223,17 @@ RunData.fromJsReviver = function fromJsReviver(key, value) {
       return Immutable.List(value.map((element) =>
         RunTag.fromJs(element)
       ));
+
+    case 'metric_minimums':
+      return Immutable.List(value.map((element) =>
+        Metric.fromJs(element)
+      ));
+
+    case 'metric_maximums':
+      return Immutable.List(value.map((element) =>
+        Metric.fromJs(element)
+      ));
+
     default:
       return Immutable.fromJS(value);
   }
