@@ -552,6 +552,22 @@ class TestFileStore(unittest.TestCase, AbstractStoreTest):
         assert metric_obj.timestamp == 50
         assert metric_obj.value == 20
 
+    def test_get_metric_min_max_values(self):
+        fs = FileStore(self.test_root)
+        for exp_id in self.experiments:
+            runs = self.exp_data[exp_id]["runs"]
+            for run_id in runs:
+                run_info = self.run_data[run_id]
+                run = fs.get_run(run_id)
+                metrics_dict = run_info.pop("metrics")
+                for metric_name, metrics in metrics_dict.items():
+                    metric_min = run.data.metric_minimums[metric_name]
+                    metric_max = run.data.metric_maximums[metric_name]
+                    expected_min = min(metrics, key=lambda metric: metric[1])[1]
+                    expected_max = max(metrics, key=lambda metric: metric[1])[1]
+                    self.assertEqual(expected_min, metric_min)
+                    self.assertEqual(expected_max, metric_max)
+
     def test_get_all_metrics(self):
         fs = FileStore(self.test_root)
         for exp_id in self.experiments:

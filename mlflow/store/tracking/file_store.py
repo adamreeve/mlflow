@@ -116,6 +116,13 @@ def _read_persisted_run_info_dict(run_info_dict):
     return RunInfo.from_dictionary(dict_copy)
 
 
+class _MetricSummary:
+    def __init__(self, latest, min_metric, max_metric):
+        self.latest = latest
+        self.min = min_metric
+        self.max = max_metric
+
+
 class FileStore(AbstractStore):
     TRASH_FOLDER_NAME = ".trash"
     ARTIFACTS_FOLDER_NAME = "artifacts"
@@ -538,9 +545,14 @@ class FileStore(AbstractStore):
 
     def _get_run_from_info(self, run_info):
         metrics = self._get_all_metrics(run_info)
+        latest_metrics = [m.latest for m in metrics]
+        metric_minimums = [m.min for m in metrics]
+        metric_maximums = [m.max for m in metrics]
         params = self._get_all_params(run_info)
         tags = self._get_all_tags(run_info)
-        return Run(run_info, RunData(metrics, params, tags))
+        return Run(
+            run_info, RunData(latest_metrics, params, tags, metric_minimums, metric_maximums)
+        )
 
     def _get_run_info(self, run_uuid):
         """
@@ -613,12 +625,15 @@ class FileStore(AbstractStore):
         # based on their first differing element. Therefore, we use max() operator to find the
         # largest value at the largest timestamp. For more information, see
         # https://docs.python.org/3/reference/expressions.html#value-comparisons
-        return max(metric_objs, key=lambda m: (m.step, m.timestamp, m.value))
+        latest = max(metric_objs, key=lambda m: (m.step, m.timestamp, m.value))
+        min_metric = min(metric_objs, key=lambda m: m.value)
+        max_metric = max(metric_objs, key=lambda m: m.value)
+        return _MetricSummary(latest, min_metric, max_metric)
 
     def get_all_metrics(self, run_uuid):
         _validate_run_id(run_uuid)
         run_info = self._get_run_info(run_uuid)
-        return self._get_all_metrics(run_info)
+        return [m.latest for m in self._get_all_metrics(run_info)]
 
     def _get_all_metrics(self, run_info):
         parent_path, metric_files = self._get_run_files(run_info, "metric")
