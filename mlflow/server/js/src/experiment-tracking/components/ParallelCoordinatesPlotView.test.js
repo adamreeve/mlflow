@@ -2,11 +2,14 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import {
   ParallelCoordinatesPlotView,
+  Axis,
   generateAttributesForCategoricalDimension,
   createDimension,
   inferType,
+  AXIS_TYPE,
   UNKNOWN_TERM,
 } from './ParallelCoordinatesPlotView';
+import { METRIC_SUMMARY_TYPES } from '../constants';
 
 describe('unit tests', () => {
   let wrapper;
@@ -17,7 +20,10 @@ describe('unit tests', () => {
     mininumProps = {
       runUuids: ['runUuid_0', 'runUuid_1'],
       paramKeys: ['param_0', 'param_1'],
-      metricKeys: ['metric_0', 'metric_1'],
+      metrics: [
+        { name: 'metric_0', type: METRIC_SUMMARY_TYPES.LATEST },
+        { name: 'metric_1', type: METRIC_SUMMARY_TYPES.LATEST },
+      ],
       paramDimensions: [
         {
           label: 'param_0',
@@ -33,11 +39,13 @@ describe('unit tests', () => {
       metricDimensions: [
         {
           label: 'metric_0',
+          metricType: METRIC_SUMMARY_TYPES.LATEST,
           values: [1, 2],
           tickformat: '.5f',
         },
         {
           label: 'metric_1',
+          metricType: METRIC_SUMMARY_TYPES.LATEST,
           values: [2, 3],
           tickformat: '.5f',
         },
@@ -53,11 +61,19 @@ describe('unit tests', () => {
   test('getDerivedStateFromProps should return null when the selections do not change', () => {
     const props = {
       paramKeys: ['param_0', 'param_1'],
-      metricKeys: ['metric_0', 'metric_1'],
+      metrics: [
+        { name: 'metric_0', type: METRIC_SUMMARY_TYPES.LATEST },
+        { name: 'metric_1', type: METRIC_SUMMARY_TYPES.LATEST },
+      ],
     };
     // state with different order but same selections
     const state = {
-      sequence: ['param_0', 'metric_0', 'metric_1', 'param_1'],
+      sequence: [
+        new Axis('param_0', AXIS_TYPE.PARAM),
+        new Axis('metric_0', AXIS_TYPE.METRIC, METRIC_SUMMARY_TYPES.LATEST),
+        new Axis('metric_1', AXIS_TYPE.METRIC, METRIC_SUMMARY_TYPES.LATEST),
+        new Axis('param_1', AXIS_TYPE.PARAM),
+      ],
     };
     expect(ParallelCoordinatesPlotView.getDerivedStateFromProps(props, state)).toBe(null);
   });

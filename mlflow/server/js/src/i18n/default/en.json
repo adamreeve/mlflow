@@ -619,6 +619,10 @@
     "defaultMessage": "Tags",
     "description": "Title text for the tags section on the model versions view page"
   },
+  "TlujuP": {
+    "defaultMessage": "Min {metricName}",
+    "description": "Format label for the minimum value of a metric"
+  },
   "U+Jzcv": {
     "defaultMessage": "<link>Version {versionNumber}</link>",
     "description": "Row entry for version columns in the registered model page"
@@ -891,6 +895,10 @@
     "defaultMessage": "Tag \"{value}\" already exists.",
     "description": "Validation message for tags that already exist in tags table in MLflow"
   },
+  "iGBO1f": {
+    "defaultMessage": "Latest {metricName}",
+    "description": "Format label for latest value of a metric"
+  },
   "iZm6YQ": {
     "defaultMessage": "<link>Learn more</link>",
     "description": "Learn more link on the form for creating model in the model registry"
@@ -966,6 +974,10 @@
   "nEoTsR": {
     "defaultMessage": "Completed Runs",
     "description": "Label for the progress bar to show the number of completed runs"
+  },
+  "nLKW5k": {
+    "defaultMessage": "Max {metricName}",
+    "description": "Format label for the maximum value of a metric"
   },
   "nQoUED": {
     "defaultMessage": "Step",

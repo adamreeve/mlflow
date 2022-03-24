@@ -1,46 +1,72 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import { findLast, invert, isEqual, min, max, range, sortBy, uniq } from 'lodash';
 import { LazyPlot } from './LazyPlot';
+import { METRIC_SUMMARY_TYPES } from '../constants';
 
 const AXIS_LABEL_CLS = '.pcp-plot .parcoords .y-axis .axis-heading .axis-title';
 export const UNKNOWN_TERM = 'unknown';
 
+export const AXIS_TYPE = {
+  PARAM: 'PARAM',
+  METRIC: 'METRIC',
+};
+
+export class Axis {
+  constructor(label, name, type, metricType) {
+    this.label = label;
+    this.name = name;
+    this.type = type;
+    this.metricType = metricType;
+  }
+
+  key() {
+    return this.type + '_' + this.name + (this.metricType || '');
+  }
+}
+
 export class ParallelCoordinatesPlotView extends React.Component {
   static propTypes = {
     runUuids: PropTypes.arrayOf(PropTypes.string).isRequired,
-    paramKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
-    metricKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
-    paramDimensions: PropTypes.arrayOf(PropTypes.object).isRequired,
-    metricDimensions: PropTypes.arrayOf(PropTypes.object).isRequired,
+    axes: PropTypes.arrayOf(PropTypes.instanceOf(Axis)).isRequired,
+    dimensions: PropTypes.arrayOf(PropTypes.object).isRequired,
   };
 
   state = {
     // Current sequence of all axes, both parameters and metrics.
-    sequence: [...this.props.paramKeys, ...this.props.metricKeys],
+    sequence: [...this.props.axes],
   };
 
   static getDerivedStateFromProps(props, state) {
-    const keysFromProps = [...props.paramKeys, ...props.metricKeys];
-    const keysFromState = state.sequence;
-    if (!_.isEqual(_.sortBy(keysFromProps), _.sortBy(keysFromState))) {
-      return { sequence: keysFromProps };
+    const axesFromProps = props.axes;
+    const axesFromState = state.sequence;
+    const sort_keys = ['name', 'type', 'metricType'];
+    if (!isEqual(sortBy(axesFromProps, sort_keys), sortBy(axesFromState, sort_keys))) {
+      return { sequence: axesFromProps };
     }
     return null;
   }
 
   getData() {
     const { sequence } = this.state;
-    const { paramDimensions, metricDimensions, metricKeys } = this.props;
-    const lastMetricKey = this.findLastKeyFromState(metricKeys);
-    const lastMetricDimension = this.props.metricDimensions.find((d) => d.label === lastMetricKey);
+    const { axes, dimensions } = this.props;
+    const lastMetricAxis = this.findLastAxisFromState(
+      axes.filter((ax) => ax.type === AXIS_TYPE.METRIC),
+    );
+    const lastMetricDimension = dimensions.find(
+      (d) =>
+        d.type === AXIS_TYPE.METRIC &&
+        d.label === lastMetricAxis.name &&
+        d.metricType === lastMetricAxis.metricType,
+    );
     const colorScaleConfigs = ParallelCoordinatesPlotView.getColorScaleConfigsForDimension(
       lastMetricDimension,
     );
+    const ids = axes.map((ax) => ax.key());
     // This make sure axis order consistency across renders.
     const orderedDimensions = ParallelCoordinatesPlotView.getDimensionsOrderedBySequence(
-      [...paramDimensions, ...metricDimensions],
+      dimensions,
       sequence,
     );
     return [
@@ -48,26 +74,28 @@ export class ParallelCoordinatesPlotView extends React.Component {
         type: 'parcoords',
         line: { ...colorScaleConfigs },
         dimensions: orderedDimensions,
+        ids,
       },
     ];
   }
 
   static getDimensionsOrderedBySequence(dimensions, sequence) {
-    return _.sortBy(dimensions, [(dimension) => sequence.indexOf(dimension.label)]);
+    const sequenceLabels = sequence.map((ax) => ax.label);
+    return sortBy(dimensions, [(dimension) => sequenceLabels.indexOf(dimension.label)]);
   }
 
   static getLabelElementsFromDom = () => Array.from(document.querySelectorAll(AXIS_LABEL_CLS));
 
-  findLastKeyFromState(keys) {
+  findLastAxisFromState(axes) {
     const { sequence } = this.state;
-    const keySet = new Set(keys);
-    return _.findLast(sequence, (key) => keySet.has(key));
+    const keySet = new Set(axes.map((ax) => ax.key()));
+    return findLast(sequence, (ax) => keySet.has(ax.key()));
   }
 
   static getColorScaleConfigsForDimension(dimension) {
     if (!dimension) return null;
-    const cmin = _.min(dimension.values);
-    const cmax = _.max(dimension.values);
+    const cmin = min(dimension.values);
+    const cmax = max(dimension.values);
     return {
       showscale: true,
       colorscale: 'Jet',
@@ -83,11 +111,12 @@ export class ParallelCoordinatesPlotView extends React.Component {
   // setting here: https://plot.ly/javascript/reference/#parcoords-labelfont
   updateMetricAxisLabelStyle = () => {
     /* eslint-disable no-param-reassign */
-    const metricsKeySet = new Set(this.props.metricKeys);
+    const metricsLabelsSet = new Set(this.metricAxes().map((ax) => ax.label));
     // TODO(Zangr) 2019-06-20 This assumes name uniqueness across params & metrics. Find a way to
     // make it more deterministic. Ex. Add add different data attributes to indicate axis kind.
+    // TODO: innerHtml won't match metric labels
     ParallelCoordinatesPlotView.getLabelElementsFromDom()
-      .filter((el) => metricsKeySet.has(el.innerHTML))
+      .filter((el) => metricsLabelsSet.has(el.innerHTML))
       .forEach((el) => {
         el.style.fill = 'green';
         el.style.fontWeight = 'bold';
@@ -95,22 +124,27 @@ export class ParallelCoordinatesPlotView extends React.Component {
   };
 
   maybeUpdateStateForColorScale = (currentSequenceFromPlotly) => {
-    const rightmostMetricKeyFromState = this.findLastKeyFromState(this.props.metricKeys);
-    const metricsKeySet = new Set(this.props.metricKeys);
-    const rightmostMetricKeyFromPlotly = _.findLast(currentSequenceFromPlotly, (key) =>
-      metricsKeySet.has(key),
+    const rightmostMetricFromState = this.findLastAxisFromState(this.metricAxes());
+    const metricLabelsSet = new Set(this.metricAxes().map((ax) => ax.label));
+    const rightmostMetricFromPlotly = findLast(currentSequenceFromPlotly, (key) =>
+      metricLabelsSet.has(key),
     );
     // Currently we always render color scale based on the rightmost metric axis, so if that changes
     // we need to setState with the new axes sequence to trigger a rerender.
-    if (rightmostMetricKeyFromState !== rightmostMetricKeyFromPlotly) {
-      this.setState({ sequence: currentSequenceFromPlotly });
+    if (rightmostMetricFromState.label !== rightmostMetricFromPlotly) {
+      this.setState({
+        sequence: sortBy(this.props.axes, [(ax) => currentSequenceFromPlotly.indexOf(ax.label)]),
+      });
     }
   };
 
-  handlePlotUpdate = ({ data: [{ dimensions }] }) => {
+  handlePlotUpdate = ({ data: [{ ids, dimensions }] }) => {
+    // eslint-disable-next-line no-console
     this.updateMetricAxisLabelStyle();
     this.maybeUpdateStateForColorScale(dimensions.map((d) => d.label));
   };
+
+  metricAxes = () => this.props.axes.filter((ax) => ax.type === AXIS_TYPE.METRIC);
 
   render() {
     return (
@@ -130,7 +164,7 @@ export class ParallelCoordinatesPlotView extends React.Component {
 export const generateAttributesForCategoricalDimension = (labels) => {
   // Create a lookup from label to its own alphabetical sorted order.
   // Ex. ['A', 'B', 'C'] => { 'A': '0', 'B': '1', 'C': '2' }
-  const sortedUniqLabels = _.uniq(labels).sort();
+  const sortedUniqLabels = uniq(labels).sort();
 
   // We always want the UNKNOWN_TERM to be at the top
   // of the chart which is end of the sorted label array
@@ -143,14 +177,14 @@ export const generateAttributesForCategoricalDimension = (labels) => {
   if (addUnknownTerm) {
     filteredSortedUniqLabels.push(UNKNOWN_TERM);
   }
-  const labelToIndexStr = _.invert(filteredSortedUniqLabels);
+  const labelToIndexStr = invert(filteredSortedUniqLabels);
   const attributes = {};
 
   // Values are assigned to their alphabetical sorted index number
   attributes.values = labels.map((label) => Number(labelToIndexStr[label]));
 
   // Default to alphabetical order for categorical axis here. Ex. [0, 1, 2, 3 ...]
-  attributes.tickvals = _.range(filteredSortedUniqLabels.length);
+  attributes.tickvals = range(filteredSortedUniqLabels.length);
 
   // Default to alphabetical order for categorical axis here. Ex. ['A', 'B', 'C', 'D' ...]
   attributes.ticktext = filteredSortedUniqLabels.map((sortedUniqLabel) =>
@@ -166,8 +200,9 @@ export const generateAttributesForCategoricalDimension = (labels) => {
  */
 export const inferType = (key, runUuids, entryByRunUuid) => {
   for (let i = 0; i < runUuids.length; i++) {
-    if (entryByRunUuid[runUuids[i]][key]) {
-      const { value } = entryByRunUuid[runUuids[i]][key];
+    const runUuid = runUuids[i];
+    if (entryByRunUuid[runUuid] && entryByRunUuid[runUuid][key]) {
+      const { value } = entryByRunUuid[runUuid][key];
       if (typeof value === 'string' && isNaN(Number(value)) && value !== 'NaN') {
         return 'string';
       }
@@ -176,19 +211,21 @@ export const inferType = (key, runUuids, entryByRunUuid) => {
   return 'number';
 };
 
-export const createDimension = (key, runUuids, entryByRunUuid) => {
+export const createDimension = (key, runUuids, entryByRunUuid, label) => {
   let attributes = {};
   const dataType = inferType(key, runUuids, entryByRunUuid);
   if (dataType === 'string') {
     attributes = generateAttributesForCategoricalDimension(
       runUuids.map((runUuid) =>
-        entryByRunUuid[runUuid][key] ? entryByRunUuid[runUuid][key].value : UNKNOWN_TERM,
+        entryByRunUuid[runUuid] && entryByRunUuid[runUuid][key]
+          ? entryByRunUuid[runUuid][key].value
+          : UNKNOWN_TERM,
       ),
     );
   } else {
     let maxValue = Number.MIN_SAFE_INTEGER;
     const values = runUuids.map((runUuid) => {
-      if (entryByRunUuid[runUuid][key]) {
+      if (entryByRunUuid[runUuid] && entryByRunUuid[runUuid][key]) {
         const { value } = entryByRunUuid[runUuid][key];
         const numericValue = Number(value);
         if (maxValue < numericValue) maxValue = numericValue;
@@ -209,21 +246,54 @@ export const createDimension = (key, runUuids, entryByRunUuid) => {
     attributes.tickformat = '.5f';
   }
   return {
-    label: key,
+    label: label || key,
     ...attributes,
   };
 };
 
+function selectMetrics(latestMetrics, minMetrics, maxMetrics, metricType) {
+  switch (metricType) {
+    case METRIC_SUMMARY_TYPES.MIN: {
+      return minMetrics;
+    }
+    case METRIC_SUMMARY_TYPES.MAX: {
+      return maxMetrics;
+    }
+    case METRIC_SUMMARY_TYPES.LATEST:
+    default: {
+      return latestMetrics;
+    }
+  }
+}
+
 const mapStateToProps = (state, ownProps) => {
-  const { runUuids, paramKeys, metricKeys } = ownProps;
-  const { latestMetricsByRunUuid, paramsByRunUuid } = state.entities;
-  const paramDimensions = paramKeys.map((paramKey) =>
-    createDimension(paramKey, runUuids, paramsByRunUuid),
-  );
-  const metricDimensions = metricKeys.map((metricKey) =>
-    createDimension(metricKey, runUuids, latestMetricsByRunUuid),
-  );
-  return { paramDimensions, metricDimensions };
+  const { runUuids, axes } = ownProps;
+  const {
+    latestMetricsByRunUuid,
+    minMetricsByRunUuid,
+    maxMetricsByRunUuid,
+    paramsByRunUuid,
+  } = state.entities;
+  const paramDimensions = axes
+    .filter((ax) => ax.type === AXIS_TYPE.PARAM)
+    .map((ax) => createDimension(ax.name, runUuids, paramsByRunUuid, ax.label));
+  const metricDimensions = axes
+    .filter((ax) => ax.type === AXIS_TYPE.METRIC)
+    .map((ax) =>
+      createDimension(
+        ax.name,
+        runUuids,
+        selectMetrics(
+          latestMetricsByRunUuid,
+          minMetricsByRunUuid,
+          maxMetricsByRunUuid,
+          ax.metricType,
+        ),
+        ax.label,
+      ),
+    );
+  const dimensions = [...paramDimensions, ...metricDimensions];
+  return { dimensions: dimensions };
 };
 
 export default connect(mapStateToProps)(ParallelCoordinatesPlotView);
