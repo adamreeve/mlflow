@@ -16,8 +16,14 @@
 }
 
 .compare-table .head-value {
+  display: flex;
+  align-items: center;
   overflow: hidden;
   overflow-wrap: break-word;
+}
+
+.compare-table .head-value a {
+  flex-grow: 1;
 }
 
 .compare-table td.data-value,

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { getExperiment, getParams, getRunInfo, getRunTags } from '../reducers/Reducers';
 import { connect } from 'react-redux';
@@ -9,14 +9,17 @@ import { CompareRunScatter } from './CompareRunScatter';
 import CompareRunContour from './CompareRunContour';
 import Routes from '../routes';
 import { Link } from 'react-router-dom';
-import { getLatestMetrics } from '../reducers/MetricReducer';
+import { getMetricHistoryApi } from '../actions';
+import { getLatestMetrics, getMinMetrics, getMaxMetrics } from '../reducers/MetricReducer';
 import CompareRunUtil from './CompareRunUtil';
 import Utils from '../../common/utils/Utils';
-import { Tabs, Tooltip, Switch } from 'antd';
+import { Select, Switch, Tabs, Tooltip } from 'antd';
 import ParallelCoordinatesPlotPanel from './ParallelCoordinatesPlotPanel';
 import { PageHeader } from '../../shared/building_blocks/PageHeader';
 import { CollapsibleSection } from '../../common/components/CollapsibleSection';
+import { METRIC_SUMMARY_TYPES } from '../constants';
 
+const { Option } = Select;
 const { TabPane } = Tabs;
 
 export class CompareRunView extends Component {
@@ -34,6 +37,7 @@ export class CompareRunView extends Component {
     // we expect this array to contain user-specified run names, or default display names
     // ("Run <uuid>") for runs without names.
     runDisplayNames: PropTypes.arrayOf(PropTypes.string).isRequired,
+    getMetricHistoryApi: PropTypes.func.isRequired,
     intl: PropTypes.shape({ formatMessage: PropTypes.func.isRequired }).isRequired,
   };
 
@@ -43,6 +47,7 @@ export class CompareRunView extends Component {
       tableWidth: null,
       onlyShowParamDiff: false,
       onlyShowMetricDiff: false,
+      metricSummaryTypes: {},
     };
     this.onResizeHandler = this.onResizeHandler.bind(this);
     this.onTableBlockScrollHandler = this.onCompareRunTableScrollHandler.bind(this);
@@ -342,25 +347,51 @@ export class CompareRunView extends Component {
           >
             <tbody>
               {this.renderDataRows(
-                this.props.metricLists,
+                this.selectMetricValues(this.props.metricLists),
                 colWidth,
                 this.state.onlyShowMetricDiff,
                 false,
                 (key, data) => {
                   return (
-                    <Link
-                      to={Routes.getMetricPageRoute(
-                        this.props.runInfos
-                          .map((info) => info.run_uuid)
-                          .filter((uuid, idx) => data[idx] !== undefined),
-                        key,
-                        experimentId,
-                      )}
-                      title='Plot chart'
-                    >
-                      {key}
-                      <i className='fas fa-chart-line' style={{ paddingLeft: '6px' }} />
-                    </Link>
+                    <Fragment key={key}>
+                      <Link
+                        to={Routes.getMetricPageRoute(
+                          this.props.runInfos
+                            .map((info) => info.run_uuid)
+                            .filter((uuid, idx) => data[idx] !== undefined),
+                          key,
+                          experimentId,
+                        )}
+                        title='Plot chart'
+                      >
+                        {key}
+                        <i className='fas fa-chart-line' style={{ paddingLeft: '6px' }} />
+                      </Link>
+                      <Tooltip
+                        title={this.props.intl.formatMessage({
+                          defaultMessage: 'Metric value to show',
+                          description:
+                            // eslint-disable-next-line max-len
+                            'Tooltip for the metric value type select dropdown for the metric comparison table',
+                        })}
+                      >
+                        <Select
+                          className='metric-type'
+                          value={this.metricSummaryTypeLabel(this.metricSummaryType(key))}
+                          onChange={(value) => this.onMetricSummaryTypeSelected(key, value)}
+                          virtual={false}
+                        >
+                          {Object.values(METRIC_SUMMARY_TYPES).map((summaryType) => {
+                            const label = this.metricSummaryTypeLabel(summaryType);
+                            return (
+                              <Option key={summaryType} title={label} value={summaryType}>
+                                {label}
+                              </Option>
+                            );
+                          })}
+                        </Select>
+                      </Tooltip>
+                    </Fragment>
                   );
                 },
                 Utils.formatMetric,
@@ -436,6 +467,96 @@ export class CompareRunView extends Component {
       );
     });
   }
+
+  selectMetricValues(metricLists) {
+    return metricLists.map((metricList) =>
+      metricList.map((keyVal) => {
+        const metricName = keyVal.key;
+        const metricSummary = keyVal.value;
+        let value;
+        switch (this.metricSummaryType(metricName)) {
+          case METRIC_SUMMARY_TYPES.MIN: {
+            value = metricSummary.min;
+            break;
+          }
+          case METRIC_SUMMARY_TYPES.MAX: {
+            value = metricSummary.max;
+            break;
+          }
+          case METRIC_SUMMARY_TYPES.LATEST:
+          default: {
+            value = metricSummary.latest;
+            break;
+          }
+        }
+        return {
+          key: metricName,
+          value: value,
+        };
+      }),
+    );
+  }
+
+  metricSummaryType(metricName) {
+    return this.state.metricSummaryTypes[metricName] || METRIC_SUMMARY_TYPES.LATEST;
+  }
+
+  metricSummaryTypeLabel(metricSummaryType) {
+    switch (metricSummaryType) {
+      case METRIC_SUMMARY_TYPES.MIN: {
+        return this.props.intl.formatMessage({
+          defaultMessage: 'Min',
+          description:
+            // eslint-disable-next-line max-len
+            'Option label for showing metric minimum values in the metric comparison table',
+        });
+      }
+      case METRIC_SUMMARY_TYPES.MAX: {
+        return this.props.intl.formatMessage({
+          defaultMessage: 'Max',
+          description:
+            // eslint-disable-next-line max-len
+            'Option label for showing metric maximum values in the metric comparison table',
+        });
+      }
+      case METRIC_SUMMARY_TYPES.LATEST:
+      default: {
+        return this.props.intl.formatMessage({
+          defaultMessage: 'Latest',
+          description:
+            // eslint-disable-next-line max-len
+            'Option label for showing latest metric values in the metric comparison table',
+        });
+      }
+    }
+  }
+
+  onMetricSummaryTypeSelected(metricName, value) {
+    if (value === METRIC_SUMMARY_TYPES.MIN || value === METRIC_SUMMARY_TYPES.MAX) {
+      this.ensureMetricMinMaxAvailable(metricName);
+    }
+    this.setState((state, _) => {
+      return {
+        ...state,
+        metricSummaryTypes: {
+          ...state.metricSummaryTypes,
+          [metricName]: value,
+        },
+      };
+    });
+  }
+
+  ensureMetricMinMaxAvailable(metricName) {
+    this.props.runUuids.forEach((runUuid, runIndex) => {
+      const metricList = this.props.metricLists[runIndex];
+      metricList.forEach((metric) => {
+        // Assume if value is defined then max is also defined
+        if (metric.key === metricName && metric.value.min === undefined) {
+          this.props.getMetricHistoryApi(runUuid, metric.key);
+        }
+      });
+    });
+  }
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -448,7 +569,22 @@ const mapStateToProps = (state, ownProps) => {
   const experiment = getExperiment(experimentId, state);
   runUuids.forEach((runUuid) => {
     runInfos.push(getRunInfo(runUuid, state));
-    metricLists.push(Object.values(getLatestMetrics(runUuid, state)));
+    const latestMetrics = getLatestMetrics(runUuid, state);
+    const minMetrics = getMinMetrics(runUuid, state);
+    const maxMetrics = getMaxMetrics(runUuid, state);
+    const metricList = Object.values(latestMetrics).map((m) => {
+      const minValue = minMetrics && minMetrics[m.key] && minMetrics[m.key].value;
+      const maxValue = maxMetrics && maxMetrics[m.key] && maxMetrics[m.key].value;
+      return {
+        key: m.key,
+        value: {
+          latest: m.value,
+          min: minValue,
+          max: maxValue,
+        },
+      };
+    });
+    metricLists.push(metricList);
     paramLists.push(Object.values(getParams(runUuid, state)));
     const runTags = getRunTags(runUuid, state);
     runDisplayNames.push(Utils.getRunDisplayName(runTags, runUuid));
@@ -456,5 +592,6 @@ const mapStateToProps = (state, ownProps) => {
   });
   return { experiment, runInfos, metricLists, paramLists, runNames, runDisplayNames };
 };
+const mapDispatchToProps = { getMetricHistoryApi };
 
-export default connect(mapStateToProps)(injectIntl(CompareRunView));
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(CompareRunView));

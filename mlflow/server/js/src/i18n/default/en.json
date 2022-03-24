@@ -207,6 +207,10 @@
     "defaultMessage": "Save",
     "description": "Modal button text to save the changes to rename the experiment run name"
   },
+  "7gNNgu": {
+    "defaultMessage": "Min",
+    "description": "Option label for showing metric minimum values in the metric comparison table"
+  },
   "7jsqqe": {
     "defaultMessage": "{timeSince, plural, =1 {1 minute} other {# minutes}} ago",
     "description": "Text for time in minutes since given date for MLflow views"
@@ -811,6 +815,10 @@
     "defaultMessage": "Share experiment view",
     "description": "Label for the share experiment view button"
   },
+  "dM/pCS": {
+    "defaultMessage": "Latest",
+    "description": "Option label for showing latest metric values in the metric comparison table"
+  },
   "dq8MJd": {
     "defaultMessage": "Contour Plot",
     "description": "Tab text for contour plot on the model comparison page"
@@ -919,6 +927,10 @@
     "defaultMessage": "Plot chart",
     "description": "Link to the view the plot chart for the experiment run"
   },
+  "lBlZ6M": {
+    "defaultMessage": "Metric value to show",
+    "description": "Tooltip for the metric value type select dropdown for the metric comparison table"
+  },
   "lISqyJ": {
     "defaultMessage": "Run details",
     "description": "Compare table title on the compare runs page"
@@ -958,6 +970,10 @@
   "nQoUED": {
     "defaultMessage": "Step",
     "description": "Radio button option to choose the step control option for the X-axis for metric graph on the experiment runs"
+  },
+  "nTJcUO": {
+    "defaultMessage": "Max",
+    "description": "Option label for showing metric maximum values in the metric comparison table"
   },
   "nVndit": {
     "defaultMessage": "Registered on {registeredDate}",
