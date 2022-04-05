@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import qs from 'qs';
 import Utils from '../../common/utils/Utils';
 import { Button } from '../../shared/building_blocks/Button';
@@ -12,6 +12,7 @@ import { getExperiment, getRunTags } from '../reducers/Reducers';
 import MetricsPlotPanel from './MetricsPlotPanel';
 import { withRouter, Link } from 'react-router-dom';
 import { PageHeader } from '../../shared/building_blocks/PageHeader';
+import { IconButton } from '../../common/components/IconButton';
 
 export class MetricViewImpl extends Component {
   static propTypes = {
@@ -22,6 +23,7 @@ export class MetricViewImpl extends Component {
     plotKeys: PropTypes.arrayOf(PropTypes.number).isRequired,
     location: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired,
+    intl: PropTypes.shape({ formatMessage: PropTypes.func.isRequired }).isRequired,
   };
 
   getRunsLink() {
@@ -59,9 +61,10 @@ export class MetricViewImpl extends Component {
     );
   };
 
-  removePlot = (plotKey) => {
+  removePlot = (ev) => {
     const { runUuids, metricKey, experiment, history, location, plotKeys } = this.props;
     const experimentId = experiment.experiment_id;
+    const plotKey = parseInt(ev.currentTarget.dataset.plotkey, 10);
     const plotStates = plotKeys
       .filter((key) => key !== plotKey)
       .map((key) => Utils.getMetricPlotStateFromUrl(location.search, key));
@@ -105,28 +108,33 @@ export class MetricViewImpl extends Component {
         <PageHeader title={title} breadcrumbs={breadcrumbs} />
         {plotKeys.map((plotKey) => (
           <Fragment key={plotKey}>
-            <MetricsPlotPanel
-              {...{
-                experimentId,
-                runUuids,
-                metricKey,
-                plotKey,
-                updateUrlState: this.updateUrlState,
-              }}
-            />
-            {plotKeys.length > 1 ? (
-              <div>
-                <Button onClick={() => this.removePlot(plotKey)}>
-                  <FormattedMessage
-                    defaultMessage='Remove plot'
-                    description='Button text to remove a plot from the metric view'
-                  />
-                </Button>
+            <div className='metrics-plot-row'>
+              <MetricsPlotPanel
+                {...{
+                  experimentId,
+                  runUuids,
+                  metricKey,
+                  plotKey,
+                  updateUrlState: this.updateUrlState,
+                }}
+              />
+              <div className='metrics-plot-actions'>
+                <IconButton
+                  icon={<i className='far fa-trash-alt' />}
+                  size='large'
+                  onClick={this.removePlot}
+                  data-plotkey={plotKey}
+                  disabled={plotKeys.length < 2}
+                  title={this.props.intl.formatMessage({
+                    defaultMessage: 'Remove plot',
+                    description: 'Button title for the button to remove a plot in the metric view',
+                  })}
+                />
               </div>
-            ) : null}
+            </div>
           </Fragment>
         ))}
-        <div>
+        <div className='metrics-view-actions'>
           <Button onClick={this.addPlot}>
             <FormattedMessage
               defaultMessage='Add plot'
@@ -151,4 +159,5 @@ const mapStateToProps = (state, ownProps) => {
   return { experiment, plotKeys, runNames };
 };
 
-export const MetricView = withRouter(connect(mapStateToProps)(MetricViewImpl));
+const MetricViewWithIntl = injectIntl(MetricViewImpl);
+export const MetricView = withRouter(connect(mapStateToProps)(MetricViewWithIntl));
