@@ -15,7 +15,6 @@ import {
 } from './MetricsPlotControls';
 import qs from 'qs';
 import { withRouter } from 'react-router-dom';
-import Routes from '../routes';
 import { RunLinksPopover } from './RunLinksPopover';
 import { getUUID } from '../../common/utils/ActionUtils';
 
@@ -31,6 +30,7 @@ export class MetricsPlotPanel extends React.Component {
   static propTypes = {
     experimentId: PropTypes.string.isRequired,
     runUuids: PropTypes.arrayOf(PropTypes.string).isRequired,
+    plotKey: PropTypes.number.isRequired,
     completedRunUuids: PropTypes.arrayOf(PropTypes.string).isRequired,
     metricKey: PropTypes.string.isRequired,
     // A map of { runUuid : { metricKey: value } }
@@ -39,10 +39,10 @@ export class MetricsPlotPanel extends React.Component {
     distinctMetricKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
     // An array of { metricKey, history, runUuid, runDisplayName }
     metricsWithRunInfoAndHistory: PropTypes.arrayOf(PropTypes.object).isRequired,
+    updateUrlState: PropTypes.func.isRequired,
     getMetricHistoryApi: PropTypes.func.isRequired,
     getRunApi: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired,
     runDisplayNames: PropTypes.arrayOf(PropTypes.string).isRequired,
   };
 
@@ -159,7 +159,7 @@ export class MetricsPlotPanel extends React.Component {
   }
 
   getUrlState() {
-    return Utils.getMetricPlotStateFromUrl(this.props.location.search);
+    return Utils.getMetricPlotStateFromUrl(this.props.location.search, this.props.plotKey);
   }
 
   static predictChartType(metrics) {
@@ -183,37 +183,11 @@ export class MetricsPlotPanel extends React.Component {
   // Update page URL from component state. Intended to be called after React applies component
   // state updates, e.g. in a setState callback
   updateUrlState = (updatedState) => {
-    const { runUuids, metricKey, location, history } = this.props;
-    const experimentId = qs.parse(location.search)['experiment'];
     const newState = {
       ...this.getUrlState(),
       ...updatedState,
     };
-    const {
-      selectedXAxis,
-      selectedMetricKeys,
-      showPoint,
-      yAxisLogScale,
-      lineSmoothness,
-      layout,
-      deselectedCurves,
-      lastLinearYAxisRange,
-    } = newState;
-    history.replace(
-      Routes.getMetricPageRoute(
-        runUuids,
-        metricKey,
-        experimentId,
-        selectedMetricKeys,
-        layout,
-        selectedXAxis,
-        yAxisLogScale,
-        lineSmoothness,
-        showPoint,
-        deselectedCurves,
-        lastLinearYAxisRange,
-      ),
-    );
+    this.props.updateUrlState(this.props.plotKey, newState);
   };
 
   loadMetricHistory = (runUuids, metricKeys) => {

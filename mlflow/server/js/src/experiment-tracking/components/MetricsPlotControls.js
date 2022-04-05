@@ -72,6 +72,7 @@ export class MetricsPlotControlsImpl extends React.Component {
         values={{ interval: Math.round(METRICS_PLOT_POLLING_INTERVAL_MS / 1000) }}
       />
     );
+    // TODO: Move "Completed Runs" progress info into metrics view so it isn't duplicated
     return (
       <div className='plot-controls' style={wrapperStyle}>
         {chartType === CHART_TYPE_LINE ? (
