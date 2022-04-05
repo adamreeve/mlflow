@@ -537,8 +537,6 @@ export class MetricsPlotPanel extends React.Component {
     return (
       <div className='metrics-plot-container'>
         <MetricsPlotControls
-          numRuns={this.props.runUuids.length}
-          numCompletedRuns={this.props.completedRunUuids.length}
           distinctMetricKeys={distinctMetricKeys}
           selectedXAxis={selectedXAxis}
           selectedMetricKeys={selectedMetricKeys}

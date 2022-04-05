@@ -1,3 +1,11 @@
+.metrics-run-info {
+  width: 350px;
+}
+
+.metrics-run-info .control-label {
+  width: 250px;
+}
+
 .metrics-plot-row {
   display: flex;
   flex-direction: row;
