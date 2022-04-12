@@ -196,8 +196,14 @@ export class ExperimentRunsTableMultiColumnView2 extends React.Component {
           ? [
               {
                 headerName: ATTRIBUTE_COLUMN_LABELS.EXPERIMENT_NAME,
-                field: 'experimentId',
+                field: 'experimentName',
                 cellRenderer: 'experimentNameRenderer',
+                equals: (experimentName1, experimentName2) => {
+                  return (
+                    experimentName1.name === experimentName2.name &&
+                    experimentName1.basename === experimentName2.basename
+                  );
+                },
                 pinned: 'left',
                 initialWidth: 140,
                 cellStyle,
@@ -371,9 +377,7 @@ export class ExperimentRunsTableMultiColumnView2 extends React.Component {
 
       const runUuid = runInfo.getRunUuid();
       const { experiment_id: experimentId } = runInfo;
-      const { name: experimentName, basename: experimentBasename } = experimentNameMap[
-        experimentId
-      ];
+      const experimentName = experimentNameMap[experimentId];
       const user = Utils.getUser(runInfo, tags);
       const queryParams = window.location && window.location.search ? window.location.search : '';
       const duration = Utils.getDuration(runInfo.start_time, runInfo.end_time);
@@ -407,7 +411,6 @@ export class ExperimentRunsTableMultiColumnView2 extends React.Component {
         runDateInfo,
         runInfo,
         experimentName,
-        experimentBasename,
         experimentId,
         duration,
         user,
@@ -672,15 +675,20 @@ function VersionCellRenderer(props) {
   return Utils.renderVersion(tags) || EMPTY_CELL_PLACEHOLDER;
 }
 
-ExperimentNameRenderer.propTypes = { data: PropTypes.object };
 function ExperimentNameRenderer(props) {
-  const { experimentId, experimentName, experimentBasename } = props.data;
+  const { experimentId } = props.data;
+  const { name, basename } = props.value;
   return (
-    <Link to={Routes.getExperimentPageRoute(experimentId)} title={experimentName}>
-      {experimentBasename}
+    <Link to={Routes.getExperimentPageRoute(experimentId)} title={name}>
+      {basename}
     </Link>
   );
 }
+
+ExperimentNameRenderer.propTypes = {
+  value: PropTypes.object,
+  data: PropTypes.object,
+};
 
 export function ModelsCellRenderer(props) {
   const { registeredModels, loggedModels, experimentId, runUuid } = props.value;
