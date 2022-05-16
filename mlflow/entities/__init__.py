@@ -7,7 +7,7 @@ from mlflow.entities.experiment import Experiment
 from mlflow.entities.experiment_tag import ExperimentTag
 from mlflow.entities.file_info import FileInfo
 from mlflow.entities.lifecycle_stage import LifecycleStage
-from mlflow.entities.metric import Metric
+from mlflow.entities.metric import Metric, MetricHistory
 from mlflow.entities.param import Param
 from mlflow.entities.run import Run
 from mlflow.entities.run_data import RunData
@@ -21,6 +21,7 @@ __all__ = [
     "Experiment",
     "FileInfo",
     "Metric",
+    "MetricHistory",
     "Param",
     "Run",
     "RunData",

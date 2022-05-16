@@ -13,7 +13,8 @@ import tempfile
 import yaml
 from typing import Any, Dict, Sequence, List, Optional, Union, TYPE_CHECKING
 
-from mlflow.entities import Experiment, Run, RunInfo, Param, Metric, RunTag, FileInfo, ViewType
+from mlflow.entities import (
+    Experiment, Run, RunInfo, Param, Metric, MetricHistory, RunTag, FileInfo, ViewType)
 from mlflow.store.entities.paged_list import PagedList
 from mlflow.entities.model_registry import RegisteredModel, ModelVersion
 from mlflow.entities.model_registry.model_version_stages import ALL_STAGES
@@ -215,6 +216,18 @@ class MlflowClient:
             --
         """
         return self._tracking_client.get_metric_history(run_id, key)
+
+    def get_metric_histories(self, run_ids: List[str], keys: List[str]) -> List[MetricHistory]:
+        """
+        Return a list of metric history objects corresponding to all values logged for a given
+        set of metrics and runs.
+
+        :param run_ids: Unique identifier for runs
+        :param keys: Metric names within the runs
+
+        :return: A list of :py:class:`mlflow.entities.MetricHistory` entities
+        """
+        return self._tracking_client.get_metric_histories(run_ids, keys)
 
     def create_run(
         self,

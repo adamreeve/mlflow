@@ -1,6 +1,6 @@
 from abc import abstractmethod, ABCMeta
 
-from mlflow.entities import ViewType
+from mlflow.entities import ViewType, MetricHistory
 from mlflow.store.entities.paged_list import PagedList
 from mlflow.store.tracking import SEARCH_MAX_RESULTS_DEFAULT
 
@@ -211,6 +211,25 @@ class AbstractStore:
         :return: A list of :py:class:`mlflow.entities.Metric` entities if logged, else empty list
         """
         pass
+
+    @abstractmethod
+    def get_metric_histories(self, run_ids, metric_keys):
+        """
+        Return a list of metric histories corresponding to the requested run ids and metric keys.
+
+        :param run_ids: Unique identifiers for runs
+        :param metric_keys: Metric names to get histories for
+
+        :return: A list of :py:class:`mlflow.entities.MetricHistory` entities
+        """
+        # Default implementation just loops over run ids and metric keys and
+        # retrieves histories separately.
+        histories = []
+        for run_id in run_ids:
+            for metric_key in metric_keys:
+                metrics = self.get_metric_history(run_id, metric_key)
+                histories.append(MetricHistory(run_id, metric_key, metrics))
+        return histories
 
     def search_runs(
         self,

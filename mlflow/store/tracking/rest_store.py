@@ -1,4 +1,4 @@
-from mlflow.entities import Experiment, Run, RunInfo, Metric, ViewType
+from mlflow.entities import Experiment, Run, RunInfo, Metric, MetricHistory, ViewType
 from mlflow.exceptions import MlflowException
 from mlflow.protos import databricks_pb2
 from mlflow.protos.service_pb2 import (
@@ -9,6 +9,7 @@ from mlflow.protos.service_pb2 import (
     SearchRuns,
     ListExperiments,
     GetMetricHistory,
+    GetMetricHistories,
     LogMetric,
     LogParam,
     SetTag,
@@ -249,6 +250,21 @@ class RestStore(AbstractStore):
         )
         response_proto = self._call_endpoint(GetMetricHistory, req_body)
         return [Metric.from_proto(metric) for metric in response_proto.metrics]
+
+    def get_metric_histories(self, run_ids, metric_keys):
+        """
+        Return all logged values for given metrics and run ids.
+
+        :param run_ids: Unique identifiers for runs
+        :param metric_keys: Metric names within the runs
+
+        :return: A list of :py:class:`mlflow.entities.MetricHistory` entities
+        """
+        req_body = message_to_json(
+            GetMetricHistories(run_ids=run_ids, metric_keys=metric_keys)
+        )
+        response_proto = self._call_endpoint(GetMetricHistories, req_body)
+        return [MetricHistory.from_proto(history) for history in response_proto.histories]
 
     def _search_runs(
         self, experiment_ids, filter_string, run_view_type, max_results, order_by, page_token

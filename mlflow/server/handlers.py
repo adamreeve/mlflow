@@ -28,6 +28,7 @@ from mlflow.protos.service_pb2 import (
     SearchRuns,
     ListArtifacts,
     GetMetricHistory,
+    GetMetricHistories,
     CreateRun,
     UpdateRun,
     LogMetric,
@@ -947,6 +948,25 @@ def _get_metric_history():
 
 @catch_mlflow_exception
 @_disable_if_artifacts_only
+def _get_metric_histories():
+    request_message = _get_request_message(
+        GetMetricHistories(),
+        schema={
+            "run_ids": [_assert_array],
+            "metric_keys": [_assert_array],
+        },
+    )
+    response_message = GetMetricHistories.Response()
+    metric_histories = _get_tracking_store().get_metric_histories(
+        request_message.run_ids, request_message.metric_keys)
+    response_message.histories.extend(history.to_proto() for history in metric_histories)
+    response = Response(mimetype="application/json")
+    response.set_data(message_to_json(response_message))
+    return response
+
+
+@catch_mlflow_exception
+@_disable_if_artifacts_only
 def _list_experiments():
     request_message = _get_request_message(
         ListExperiments(), schema={"max_results": [_assert_intlike], "page_token": [_assert_string]}
@@ -1545,6 +1565,7 @@ HANDLERS = {
     SearchRuns: _search_runs,
     ListArtifacts: _list_artifacts,
     GetMetricHistory: _get_metric_history,
+    GetMetricHistories: _get_metric_histories,
     ListExperiments: _list_experiments,
     # Model Registry APIs
     CreateRegisteredModel: _create_registered_model,

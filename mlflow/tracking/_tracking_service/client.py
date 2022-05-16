@@ -74,6 +74,18 @@ class TrackingServiceClient:
         """
         return self.store.get_metric_history(run_id=run_id, metric_key=key)
 
+    def get_metric_histories(self, run_ids, keys):
+        """
+        Return a list of metric history objects corresponding to all values logged for a given
+        set of metrics and runs.
+
+        :param run_ids: Unique identifier for runs
+        :param keys: Metric names within the runs
+
+        :return: A list of :py:class:`mlflow.entities.MetricHistory` entities
+        """
+        return self.store.get_metric_histories(run_ids=run_ids, metric_keys=keys)
+
     def create_run(self, experiment_id, start_time=None, tags=None):
         """
         Create a :py:class:`mlflow.entities.Run` object that can be associated with

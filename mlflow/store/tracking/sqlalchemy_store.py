@@ -24,7 +24,7 @@ from mlflow.store.tracking.dbmodels.models import (
     SqlLatestMetric,
 )
 from mlflow.store.db.base_sql_model import Base
-from mlflow.entities import RunStatus, SourceType, Experiment
+from mlflow.entities import RunStatus, SourceType, Experiment, MetricHistory
 from mlflow.store.tracking.abstract_store import AbstractStore
 from mlflow.store.entities.paged_list import PagedList
 from mlflow.entities import ViewType
@@ -785,6 +785,31 @@ class SqlAlchemyStore(AbstractStore):
         with self.ManagedSessionMaker() as session:
             metrics = session.query(SqlMetric).filter_by(run_uuid=run_id, key=metric_key).all()
             return [metric.to_mlflow_entity() for metric in metrics]
+
+    def get_metric_histories(self, run_ids, metric_keys):
+        with self.ManagedSessionMaker() as session:
+            results = (session.query(SqlMetric)
+                .filter(
+                    SqlMetric.run_uuid.in_(run_ids),
+                    SqlMetric.key.in_(metric_keys))
+                .order_by(SqlMetric.run_uuid, SqlMetric.key)
+                .all())
+            histories = []
+            run_uuid = None
+            metric_key = None
+            metrics = None
+            for metric in results:
+                if metric.run_uuid != run_uuid or metric.key != metric_key:
+                    if run_uuid is not None:
+                        histories.append(MetricHistory(run_uuid, metric_key, metrics))
+                    run_uuid = metric.run_uuid
+                    metric_key = metric.key
+                    metrics = []
+                metrics.append(metric.to_mlflow_entity())
+            if metrics:
+                histories.append(MetricHistory(run_uuid, metric_key, metrics))
+            # TODO: Return a history for run/key pairs that don't have any metrics logged?
+            return histories
 
     def log_param(self, run_id, param):
         with self.ManagedSessionMaker() as session:
