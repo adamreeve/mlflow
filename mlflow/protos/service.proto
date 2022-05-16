@@ -406,6 +406,24 @@ service MlflowService {
     };
   }
 
+  // Get lists of all values for the specified metrics and runs.
+  //
+  rpc getMetricHistories (GetMetricHistories) returns (GetMetricHistories.Response) {
+    option (rpc) = {
+      endpoints: [{
+        method: "GET",
+        path: "/mlflow/metrics/get-histories"
+        since { major: 2, minor: 0 },
+      }, {
+        method: "GET",
+        path: "/preview/mlflow/metrics/get-histories"
+        since { major: 2, minor: 0 },
+      }],
+      visibility: PUBLIC,
+      rpc_doc_title: "Get Metric Histories",
+    };
+  }
+
 
   // Log a batch of metrics, params, and tags for a run.
   // If any data failed to be persisted, the server will respond with an error (non-200 status code).
@@ -552,6 +570,17 @@ message Metric {
 
   // Step at which to log the metric.
   optional int64 step = 4 [default = 0];
+}
+
+message MetricHistory {
+  // Run id that metrics are from
+  optional string run_id = 1;
+
+  // Metric key for all metric values in this history
+  optional string metric_key = 2;
+
+  // All logged values for this metric.
+  repeated Metric metrics = 3;
 }
 
 // Param associated with a run.
@@ -1037,6 +1066,21 @@ message GetMetricHistory {
   message Response {
     // All logged values for this metric.
     repeated Metric metrics = 1;
+  }
+}
+
+message GetMetricHistories {
+  option (scalapb.message).extends = "com.databricks.rpc.RPC[$this.Response]";
+
+  // IDs of the runs from which to fetch metric values.
+  repeated string run_ids = 1;
+
+  // Names of the metrics to fetch.
+  repeated string metric_keys = 2 [(validate_required) = true];
+
+  message Response {
+      // A history for each run and metric pair.
+      repeated MetricHistory histories = 1;
   }
 }
 
