@@ -24,7 +24,7 @@ from mlflow.store.tracking.dbmodels.models import (
     SqlLatestMetric,
 )
 from mlflow.store.db.base_sql_model import Base
-from mlflow.entities import RunStatus, SourceType, Experiment, MetricHistory
+from mlflow.entities import RunStatus, SourceType, Experiment, Metric, MetricHistory
 from mlflow.store.tracking.abstract_store import AbstractStore
 from mlflow.store.entities.paged_list import PagedList
 from mlflow.entities import ViewType
@@ -782,18 +782,29 @@ class SqlAlchemyStore(AbstractStore):
             self._save_to_db(session=session, objs=list(new_latest_metric_dict.values()))
 
     def get_metric_history(self, run_id, metric_key):
+        nan = float("nan")
         with self.ManagedSessionMaker() as session:
-            metrics = session.query(SqlMetric).filter_by(run_uuid=run_id, key=metric_key).all()
-            return [metric.to_mlflow_entity() for metric in metrics]
+            metrics = (
+                session.query(SqlMetric)
+                .filter_by(run_uuid=run_id, key=metric_key)
+                .with_entities(
+                    SqlMetric.value, SqlMetric.timestamp, SqlMetric.step, SqlMetric.is_nan
+                )
+                .all()
+            )
+            return [
+                Metric(metric_key, nan if is_nan else value, timestamp, step)
+                for (value, timestamp, step, is_nan) in metrics
+            ]
 
     def get_metric_histories(self, run_ids, metric_keys):
         with self.ManagedSessionMaker() as session:
-            results = (session.query(SqlMetric)
-                .filter(
-                    SqlMetric.run_uuid.in_(run_ids),
-                    SqlMetric.key.in_(metric_keys))
+            results = (
+                session.query(SqlMetric)
+                .filter(SqlMetric.run_uuid.in_(run_ids), SqlMetric.key.in_(metric_keys))
                 .order_by(SqlMetric.run_uuid, SqlMetric.key)
-                .all())
+                .all()
+            )
             histories = []
             run_uuid = None
             metric_key = None
